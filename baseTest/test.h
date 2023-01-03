@@ -13,6 +13,7 @@
 #include "atomic.h"
 #include "singleton.h"
 #include "weakCallback.h"
+#include "date.h"
 
 #include <sstream>
 #include <vector>
@@ -42,3 +43,4 @@ void testBoundedBlockingQueue();
 void testAtomic();
 void testSingleton();
 void testWeakCallback();
+void testDate();

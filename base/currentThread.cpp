@@ -37,9 +37,9 @@ namespace CurrentThread {
 	}
 #endif
         
-    std::string basename(const std::string& file) {
+    string basename(const string& file) {
         unsigned int i = file.find_last_of("\\/");
-        if (i == std::string::npos) {
+        if (i == string::npos) {
             return file;
         }
         else {
@@ -149,7 +149,7 @@ namespace CurrentThread {
         return frames;
     }
 
-    std::string convertStackFrame(std::vector<StackFrame>&& frames) {
+    string convertStackFrame(std::vector<StackFrame>&& frames) {
         std::stringstream buff;
 
         for (int i = 0; i < frames.size(); i++) {

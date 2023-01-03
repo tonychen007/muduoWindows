@@ -1,11 +1,11 @@
 #pragma once
 
 #include <exception>
-#include <string>
+#include "types.h"
 
 class Exception : public std::exception {
 public:
-	Exception(std::string what);
+	Exception(string what);
 	~Exception() noexcept override = default;
 
 	const char* what() const noexcept override {
@@ -17,6 +17,6 @@ public:
 	}
 
 private:
-	std::string msg_;
-	std::string stack_;
+	string msg_;
+	string stack_;
 };

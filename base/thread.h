@@ -1,16 +1,17 @@
 #pragma once
 
 #include "noncopyable.h"
-#include <string>
+#include "types.h"
+#include "atomic.h"
 #include <thread>
 #include <functional>
-#include <atomic>
+
 
 class Thread:noncopyable {
 public:
 	typedef std::function<void()> ThreadFunc;
 
-	Thread(ThreadFunc func, const std::string& name = std::string());
+	Thread(ThreadFunc func, const string& name = string());
 	~Thread();
 
 	void start();
@@ -18,9 +19,9 @@ public:
 
 	bool started() const { return started_; }
 	int tid() const { return tid_; }
-	const std::string& name() const { return name_; }
+	const string& name() const { return name_; }
 
-	static int64_t numCreated() { return num_.load(); }
+	static int64_t numCreated() { return num_.get(); }
 private:
 	void setDefaultName();
 
@@ -29,17 +30,17 @@ private:
 	int  tid_;
 	std::thread thread_;
 	ThreadFunc func_;
-	std::string name_;
+	string name_;
 
-	static std::atomic<int64_t> num_;
+	static AtomicInt num_;
 };
 
 struct ThreadData {
 	typedef Thread::ThreadFunc ThreadFunc;
 	ThreadFunc func_;
-	std::string name_;
+	string name_;
 	int* tid_;
 
-	ThreadData(ThreadFunc&& func, const std::string& name, int* tid);
+	ThreadData(ThreadFunc&& func, const string& name, int* tid);
 	void runInThread();
 };

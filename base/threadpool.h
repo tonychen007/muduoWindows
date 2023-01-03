@@ -12,7 +12,7 @@ class Threadpool :noncopyable {
 public:
 	typedef std::function<void()> Task;
 
-	explicit Threadpool(const std::string& name = std::string("Threadpool"));
+	explicit Threadpool(const string& name = string("Threadpool"));
 	~Threadpool();
 
 	void setMaxQueueSize(int maxSize) { maxQueueSize_ = maxSize; }
@@ -22,7 +22,7 @@ public:
 	void stop();
 	void run(Task f);
 
-	const std::string& name() const { return name_; }
+	const string& name() const { return name_; }
 
 	size_t queueSize() const;
 private:
@@ -33,7 +33,7 @@ private:
 	mutable MutexLock mutex_;
 	Condition notEmpty_;
 	Condition notFull_;
-	std::string name_;
+	string name_;
 	std::vector<std::unique_ptr<Thread>> threads_;
 	std::deque<Task> queue_;
 	size_t maxQueueSize_;

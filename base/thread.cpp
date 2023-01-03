@@ -2,9 +2,9 @@
 #include "currentThread.h"
 #include "exception.h"
 
-std::atomic<int64_t> Thread::num_;
+AtomicInt Thread::num_;
 
-ThreadData::ThreadData(ThreadFunc&& func, const std::string& name, int* tid) 
+ThreadData::ThreadData(ThreadFunc&& func, const string& name, int* tid) 
 	:func_(std::move(func)), name_(name), tid_(tid) {
 }
 
@@ -39,7 +39,7 @@ void* startThread(void* obj) {
 	return nullptr;
 }
 
-Thread::Thread(ThreadFunc func, const std::string& name)
+Thread::Thread(ThreadFunc func, const string& name)
 	:started_(0),joined_(0), tid_(0), name_(name), func_(std::move(func)) {
 	setDefaultName();
 }
@@ -50,7 +50,7 @@ Thread::~Thread() {
 }
 
 void Thread::setDefaultName() {
-	int64_t num = num_.fetch_add(1);
+	int64_t num = num_.incrAndGet();
 	if (name_.empty()) {
 		char buf[32];
 		snprintf(buf, sizeof buf, "Thread%lld", num);

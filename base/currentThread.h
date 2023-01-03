@@ -1,8 +1,8 @@
 #pragma once
 
 #include <Windows.h>
-#include <string>
 #include <vector>
+#include "types.h"
 
 #define __thread _declspec(thread)
 
@@ -52,13 +52,13 @@ namespace CurrentThread {
 
     struct StackFrame {
         DWORD64 address;
-        std::string name;
-        std::string module;
+        string name;
+        string module;
         unsigned int line;
-        std::string file;
+        string file;
     };
 
     std::vector<StackFrame> stacktrace();
 
-    std::string convertStackFrame(std::vector<StackFrame>&& frames);
+    string convertStackFrame(std::vector<StackFrame>&& frames);
 }

@@ -4,7 +4,7 @@
 #include "types.h"
 
 
-Threadpool::Threadpool(const std::string& name)
+Threadpool::Threadpool(const string& name)
 :	mutex_(),
 	notEmpty_(mutex_),
 	notFull_(mutex_),

@@ -1,7 +1,7 @@
 #pragma once
 
 #include <stdint.h>
-#include <string>
+#include "types.h"
 
 class Timestamp {
 public:
@@ -9,8 +9,8 @@ public:
 	explicit Timestamp(int64_t microSecondsSinceEpochArg)
 		: microSecondsSinceEpoch_(microSecondsSinceEpochArg) {}
 
-	std::string toString() const;
-	std::string toFormattedString(bool showMicroseconds = true) const;
+	string toString() const;
+	string toFormattedString(bool showMicroseconds = true) const;
 
 	bool valid() const { return microSecondsSinceEpoch_ > 0; }
 	int64_t microSecondsSinceEpoch() const { return microSecondsSinceEpoch_; }

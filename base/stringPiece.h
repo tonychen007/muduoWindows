@@ -41,7 +41,7 @@
 #pragma once
 #include <string.h>
 #include <iosfwd>    // for ostream forward-declaration
-#include <string>
+#include "types.h"
 
 using namespace std;
 

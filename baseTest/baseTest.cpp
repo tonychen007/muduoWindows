@@ -14,4 +14,5 @@ int main() {
 	//testAtomic();
 	//testSingleton();
 	//testWeakCallback();
+	testDate();
 }
