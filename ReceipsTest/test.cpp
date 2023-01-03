@@ -11,14 +11,13 @@ HANDLE GetThreadById(DWORD id) {
 
 void testMutex(int kThread) {
 	int kCount = 1000 * 1000 * 10;
-	vector<unique_ptr<ThreadWrapper>> ths;
+	vector<unique_ptr<Thread>> ths;
 	vector<int> vec;
 	MutexLock m;
-
-	//auto st = system_clock::now();
+	
 	Timestamp start(Timestamp::now());
 	for (int i = 0; i < kThread; i++) {
-		ThreadWrapper* th = new ThreadWrapper([&] {
+		Thread* th = new Thread([&] {
 				for (int i = 0; i < kCount; ++i) {
 					MutexLockGuard lock(m);
 					vec.push_back(i);
@@ -49,7 +48,7 @@ void testMutexHelper() {
 }
 
 void testCurrentThread() {
-	vector<unique_ptr<ThreadWrapper>> ths;
+	vector<unique_ptr<Thread>> ths;
 	int kThread = 10;
 	HANDLE hEv = CreateEvent(NULL, FALSE, FALSE, NULL);
 
@@ -61,7 +60,7 @@ void testCurrentThread() {
 
 
 	for (int i = 0; i < kThread; i++) {
-		ThreadWrapper* th = new ThreadWrapper([&] {
+		Thread* th = new Thread([&] {
 			int tid = CurrentThread::tid();
 			printf("[id:%d]-Name:%s\n", CurrentThread::tid(), CurrentThread::name());
 			Sleep(5000);
@@ -89,9 +88,9 @@ void testCondition() {
 	Condition cond(m);
 	volatile int isShutdown = 0;
 	
-	ThreadWrapper takeTh([&] {
+	Thread takeTh([&] {
 		while (1) {
-			std::unique_lock<std::mutex> lock = cond.getUniqueLock();
+			uniqueLock lock = cond.getUniqueLock();
 			while (vec.empty())
 				cond.wait(lock);
 
@@ -103,9 +102,9 @@ void testCondition() {
 		}
 	}, "Take Thread");
 
-	ThreadWrapper putTh1([&] {
+	Thread putTh1([&] {
 		while (1) {
-			std::unique_lock<std::mutex> lock = cond.getUniqueLock();
+			uniqueLock lock = cond.getUniqueLock();
 			cond.waitfor(lock, 10);
 			vec.push_back(rand() % 32767);
 			cond.notify();
@@ -113,9 +112,9 @@ void testCondition() {
 		}
 	}, "Put Thread1");
 
-	ThreadWrapper putTh2([&] {
+	Thread putTh2([&] {
 		while (1) {
-			std::unique_lock<std::mutex> lock = cond.getUniqueLock();
+			uniqueLock lock = cond.getUniqueLock();
 			cond.waitfor(lock, 5);
 			vec.push_back(rand() % 32767);
 			cond.notify();
@@ -156,13 +155,13 @@ void fooException() {
 }
 
 void testThread() {
-	ThreadWrapper th(foo);
+	Thread th(foo);
 	th.start();
 	th.join();
 }
 
 void testThreadException() {
-	ThreadWrapper th(fooException);
+	Thread th(fooException);
 	th.start();
 	th.join();
 }
@@ -208,4 +207,140 @@ void testTimestamp() {
 	ts = ts.now();
 	printf("%s\n",ts.toString().c_str());
 	printf("%s\n", ts.toFormattedString().c_str());
+}
+
+void testBlockingQueue() {
+	const int kThread = 10;
+	const int kCount = 100000;
+	CountDownLatch latch(kThread);
+	BlockingQueue<Timestamp> queue;
+	BlockingQueue<int> delayQueue;
+	vector<unique_ptr<Thread>> threads;
+
+	for (int i = 0; i < kThread; i++) {
+		char name[32];
+		snprintf(name, sizeof name, "work thread %d", i);
+
+		threads.emplace_back(new Thread([&] {
+			printf("tid=%d, %s started\n", CurrentThread::tid(), CurrentThread::name());
+			
+			latch.countDown();
+			std::map<int, int> delays;
+			bool running = true;
+
+			while (running) {
+				Timestamp t(queue.take());
+				Timestamp now(Timestamp::now());
+
+				if (t.valid()) {
+					int delay = static_cast<int>(timeDifference(now, t) * 1000000);
+					++delays[delay];
+					delayQueue.put(delay);
+				}
+				running = t.valid();
+			}
+		
+			printf("tid=%d, %s stopped\n", CurrentThread::tid(), CurrentThread::name());
+			for (const auto& delay : delays) {
+				printf("tid = %d, delay = %d, count = %d\n", CurrentThread::tid(), delay.first, delay.second);
+			}
+
+		},name));
+	}
+
+	for (auto& thr : threads) {
+		thr->start();
+	}
+
+	latch.wait();
+	int64_t totalDelay = 0;
+	for (int i = 0; i < kCount; ++i) {
+		Timestamp now(Timestamp::now());
+		queue.put(now);
+		totalDelay += delayQueue.take();
+	}
+
+	// join threads
+	for (size_t i = 0; i < threads.size(); ++i) {
+		queue.put(Timestamp::invalid());
+	}
+	for (auto& thr : threads) {
+		thr->join();
+	}
+
+	printf("Average delay: %.3fus\n", static_cast<double>(totalDelay) / kCount);
+}
+
+void testBlockingQueue2(int kThread) {
+	CountDownLatch latch(kThread);
+	vector<unique_ptr<BlockingQueue<int>>> queue;
+	BlockingQueue<pair<int, Timestamp>> timequeue;
+	vector<unique_ptr<Thread>> threads;
+
+	for (int i = 0; i < kThread; ++i) {
+		queue.emplace_back(new BlockingQueue<int>());
+		
+		char name[32];
+		snprintf(name, sizeof name, "work thread %d", i);
+		threads.emplace_back(new Thread([&,i] {
+			latch.countDown();
+
+			BlockingQueue<int>* input = queue[i].get();
+			BlockingQueue<int>* output = queue[(i+1) % queue.size()].get();
+			while (true) {
+				int value = input->take();
+				if (value > 0) {
+					output->put(std::move(value - 1));
+					//printf("thread %d, got %d\n", i, value);
+					continue;
+				}
+
+				if (value == 0) {
+					timequeue.put(std::make_pair(i, Timestamp::now()));
+				}
+				break;
+			}
+		}, name));
+	}
+
+	// start
+	Timestamp start = Timestamp::now();
+	for (auto& thr : threads) {
+		thr->start();
+	}
+
+	latch.wait();
+	Timestamp started = Timestamp::now();
+	printf("all %zd threads started, %.3fms\n", threads.size(), 1e3 * timeDifference(started, start));
+
+	// run
+	start = Timestamp::now();
+	const int rounds = 10003;
+	queue[0]->put(rounds);
+
+	auto done = timequeue.take();
+	double elapsed = timeDifference(done.second, start);
+	printf("thread id=%d done, total %.3fms, %.3fus / round\n", done.first, 1e3 * elapsed, 1e6 * elapsed / rounds);
+
+	// join threads
+	Timestamp stop = Timestamp::now();
+	for (const auto& queue : queue) {
+		queue->put(-1);
+	}
+	for (auto& thr : threads) {
+		thr->join();
+	}
+	Timestamp t2 = Timestamp::now();
+	printf("all %zd threads joined, %.3fms\n", threads.size(), 1e3 * timeDifference(t2, stop));	
+}
+
+void testBlockingQueue2Helper() {
+	testBlockingQueue2(1);
+	printf("\n");
+	testBlockingQueue2(4);
+	printf("\n");
+	testBlockingQueue2(8);
+	printf("\n");
+	testBlockingQueue2(16);
+	printf("\n");
 }

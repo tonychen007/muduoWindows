@@ -6,12 +6,12 @@
 #include <functional>
 #include <atomic>
 
-class ThreadWrapper:noncopyable {
+class Thread:noncopyable {
 public:
 	typedef std::function<void()> ThreadFunc;
 
-	ThreadWrapper(ThreadFunc func, const std::string& name = std::string());
-	~ThreadWrapper();
+	Thread(ThreadFunc func, const std::string& name = std::string());
+	~Thread();
 
 	void start();
 	void join();
@@ -35,7 +35,7 @@ private:
 };
 
 struct ThreadData {
-	typedef ThreadWrapper::ThreadFunc ThreadFunc;
+	typedef Thread::ThreadFunc ThreadFunc;
 	ThreadFunc func_;
 	std::string name_;
 	int* tid_;

@@ -7,5 +7,7 @@ int main() {
 	//testThread();
 	//testThreadException();
 	//testThreadpoolHelper();
-	testTimestamp();
+	//testTimestamp();
+	//testBlockingQueue();
+	testBlockingQueue2Helper();
 }

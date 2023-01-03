@@ -150,6 +150,7 @@
     <ClCompile Include="timestamp.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="blockingQueue.h" />
     <ClInclude Include="condition.h" />
     <ClInclude Include="countDownLatch.h" />
     <ClInclude Include="currentThread.h" />
@@ -159,6 +160,7 @@
     <ClInclude Include="thread.h" />
     <ClInclude Include="threadpool.h" />
     <ClInclude Include="timestamp.h" />
+    <ClInclude Include="types.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

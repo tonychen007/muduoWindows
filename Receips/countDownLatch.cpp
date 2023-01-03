@@ -1,5 +1,7 @@
 #include "countDownLatch.h"
+#include "types.h"
 #include <memory>
+
 
 CountDownLatch::CountDownLatch(int count)
 	: mutex_(),
@@ -9,9 +11,9 @@ CountDownLatch::CountDownLatch(int count)
 }
 
 void CountDownLatch::wait() {
-	std::unique_lock<std::mutex> l = condition_.getUniqueLock();
+	uniqueLock lock = condition_.getUniqueLock();
 	while (count_ > 0)
-		condition_.wait(l);
+		condition_.wait(lock);
 }
 
 void CountDownLatch::countDown() {

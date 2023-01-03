@@ -1,6 +1,8 @@
 #include "threadpool.h"
 #include "currentThread.h"
 #include "exception.h"
+#include "types.h"
+
 
 Threadpool::Threadpool(const std::string& name)
 :	mutex_(),
@@ -25,7 +27,7 @@ void Threadpool::start(int numThreads) {
 	for (int i = 0; i < numThreads; ++i) {
 		char id[32];
 		snprintf(id, sizeof id, "%d", i + 1);
-		threads_.emplace_back(new ThreadWrapper(
+		threads_.emplace_back(new Thread(
 			std::bind(&Threadpool::runInThread, this), name_ + id));
 		threads_[i]->start();
 	}
@@ -49,7 +51,7 @@ void Threadpool::run(Task f) {
 		f();
 	}
 	else {
-		std::unique_lock<std::mutex> lock = notFull_.getUniqueLock();
+		uniqueLock lock = notFull_.getUniqueLock();
 		mutex_.assignedHolder();
 		while (isFull() && running_) {
 			notFull_.wait(lock);
@@ -102,7 +104,7 @@ void Threadpool::runInThread() {
 }
 
 Threadpool::Task Threadpool::take() {
-	std::unique_lock<std::mutex> lock = notEmpty_.getUniqueLock();
+	uniqueLock lock = notEmpty_.getUniqueLock();
 	while (queue_.empty() && running_)
 		notEmpty_.wait(lock);
 

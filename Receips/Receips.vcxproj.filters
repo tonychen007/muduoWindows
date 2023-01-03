@@ -65,5 +65,11 @@
     <ClInclude Include="timestamp.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
+    <ClInclude Include="blockingQueue.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="types.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

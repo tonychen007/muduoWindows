@@ -34,7 +34,7 @@ private:
 	Condition notEmpty_;
 	Condition notFull_;
 	std::string name_;
-	std::vector<std::unique_ptr<ThreadWrapper>> threads_;
+	std::vector<std::unique_ptr<Thread>> threads_;
 	std::deque<Task> queue_;
 	size_t maxQueueSize_;
 	bool running_;

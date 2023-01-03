@@ -6,6 +6,9 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Receips", "Receips.vcxproj", "{14679E2B-E0C1-4038-AAF1-F7E491233A9F}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ReceipsTest", "..\ReceipsTest\ReceipsTest.vcxproj", "{FA2D9E39-CF12-4012-AB11-C48145DE5769}"
+	ProjectSection(ProjectDependencies) = postProject
+		{14679E2B-E0C1-4038-AAF1-F7E491233A9F} = {14679E2B-E0C1-4038-AAF1-F7E491233A9F}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
