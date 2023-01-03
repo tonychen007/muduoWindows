@@ -9,6 +9,10 @@
 #include "countDownLatch.h"
 #include "timestamp.h"
 #include "blockingQueue.h"
+#include "boundedBlockingQueue.h"
+#include "atomic.h"
+#include "singleton.h"
+#include "weakCallback.h"
 
 #include <sstream>
 #include <vector>
@@ -34,3 +38,7 @@ void testTimestamp();
 void testBlockingQueue();
 void testBlockingQueue2(int kThread);
 void testBlockingQueue2Helper();
+void testBoundedBlockingQueue();
+void testAtomic();
+void testSingleton();
+void testWeakCallback();

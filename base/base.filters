@@ -71,5 +71,20 @@
     <ClInclude Include="types.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
+    <ClInclude Include="boundedBlockingQueue.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="atomic.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="stringPiece.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="singleton.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="weakCallback.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

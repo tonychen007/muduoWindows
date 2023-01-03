@@ -9,5 +9,9 @@ int main() {
 	//testThreadpoolHelper();
 	//testTimestamp();
 	//testBlockingQueue();
-	testBlockingQueue2Helper();
+	//testBlockingQueue2Helper();
+	//testBoundedBlockingQueue();
+	//testAtomic();
+	//testSingleton();
+	//testWeakCallback();
 }

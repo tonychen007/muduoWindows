@@ -344,3 +344,116 @@ void testBlockingQueue2Helper() {
 	testBlockingQueue2(16);
 	printf("\n");
 }
+
+void testBoundedBlockingQueue() {
+	const int kThread = 8;
+	const int kCount = 10000;
+	BoundedBlockingQueue<const char*> q(20);
+	CountDownLatch latch(kThread);
+	vector<unique_ptr<Thread>> threads;
+	
+	for (int i = 0; i < kThread; i++) {
+		char name[32];
+		snprintf(name, sizeof name, "work thread %d", i);
+		threads.emplace_back(new Thread([&] {
+			printf("tid=%d, %s started\n", CurrentThread::tid(), CurrentThread::name());
+			latch.countDown();
+			bool running = true;
+			while (running) {
+				std::string d(q.take());
+				printf("tid=%d, get data = %s, size = %zd\n", CurrentThread::tid(), d.c_str(), q.size());
+				running = (d != "stop");
+			}
+			printf("tid=%d, %s stopped\n", CurrentThread::tid(), CurrentThread::name());
+		}, name));
+	}
+	for (auto& thr : threads) {
+		thr->start();
+	}
+
+	latch.wait();
+	for (int i = 0; i < kCount; ++i) {
+		char buf[32];
+		snprintf(buf, sizeof buf, "hello %d", i);
+		q.put(buf);
+		printf("tid=%d, put data = %s, size = %zd\n", CurrentThread::tid(), buf, q.size());
+	}
+
+	for (size_t i = 0; i < threads.size(); ++i) {
+		q.put("stop");
+	}
+	for (auto& thr : threads) {
+		thr->join();
+	}
+
+	printf("number of created threads %lld\n", Thread::numCreated());
+}
+
+void testAtomic() {
+	AtomicInt a0;
+
+	assert(a0.get() == 0);
+	assert(a0.getAndAdd(1) == 0);
+	assert(a0.get() == 1);
+	assert(a0.addAndGet(2) == 3);
+	assert(a0.get() == 3);
+	assert(a0.incrAndGet() == 4);
+	assert(a0.get() == 4);
+	a0.incr();
+	assert(a0.get() == 5);
+	assert(a0.addAndGet(-3) == 2);
+	assert(a0.getAndSet(100) == 2);
+	assert(a0.get() == 100);
+}
+
+void testSingleton() {
+	struct Test {
+		Test() {
+			printf("tid=%d, constructing %p\n", CurrentThread::tid(), this);
+		}
+
+		~Test() {
+			printf("tid=%d, destructing %p %s\n", CurrentThread::tid(), this, name_.c_str());
+		}
+
+		const string& name() const { return name_; }
+		void setName(const string& n) { name_ = n; }
+
+		string name_;
+	};
+
+	struct TestNoDestroy {
+	public:
+		void no_destroy();
+		TestNoDestroy() {
+			printf("tid=%d, constructing TestNoDestroy %p\n", CurrentThread::tid(), this);
+		}
+
+		~TestNoDestroy() {
+			printf("tid=%d, destructing TestNoDestroy %p\n", CurrentThread::tid(), this);
+		}
+	};
+
+	Singleton<Test>::instance().setName("only one");
+	Thread t1([&] {
+		printf("tid=%d, %p name=%s\n",
+			CurrentThread::tid(),
+			&Singleton<Test>::instance(),
+			Singleton<Test>::instance().name().c_str());
+		Singleton<Test>::instance().setName("only one, changed");
+	});
+	t1.start();
+	t1.join();
+	printf("tid=%d, %p name=%s\n", CurrentThread::tid(), &Singleton<Test>::instance(), Singleton<Test>::instance().name().c_str());
+}
+
+void testWeakCallback() {
+	struct Foo {
+		void bar() {
+			printf("Foo::bar\n");
+		}
+	};
+
+	shared_ptr<Foo> sf(new Foo());
+	makeWeakCallback(sf, &Foo::bar)();
+}
