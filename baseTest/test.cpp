@@ -604,5 +604,11 @@ void testProcessInfo() {
 		printf("Thread id:%d--%s\n", th.first, th.second.c_str());
 	}
 	*/
-	printf("opened files=%d\n",ProcessInfo::openedFiles());
+	int files = 0;
+	ProcessInfo::fileInfo fileInfo = ProcessInfo::openedFiles();
+	for (auto& a : fileInfo) {
+		files += a.second.size();
+	}
+	
+	printf("opened files=%d\n", files);
 }

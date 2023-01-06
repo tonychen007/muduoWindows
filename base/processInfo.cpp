@@ -168,11 +168,11 @@ namespace ProcessInfo {
 		return vec;
 	}
 
-	int openedFiles() {
-		int files = 0;
+	fileInfo openedFiles() {
+		fileInfo finfo;
 		int fileTypeIndex = getFileTypeIndex();
 		if (fileTypeIndex == -1) {
-			return 0;
+			return fileInfo();
 		}
 
 		CToolhelp thProcesses(TH32CS_SNAPPROCESS);
@@ -203,30 +203,78 @@ namespace ProcessInfo {
 				auto nameBuffer = std::make_unique<BYTE[]>(size);
 				for (ULONG i = 0; i < info->NumberOfHandles; i++) {
 					if (info->Handles[i].ObjectTypeIndex == fileTypeIndex) {
-						files++;
+						std::vector<std::string>& files = finfo[pe.th32ProcessID];
 						HANDLE hv = info->Handles[i].HandleValue;
 						HANDLE hTarget;
-						if (!::DuplicateHandle(hP, hv, ::GetCurrentProcess(), &hTarget, 0, TRUE, DUPLICATE_SAME_ACCESS))
+
+						if (!::DuplicateHandle(hP, hv, ::GetCurrentProcess(), &hTarget, 0, 0, 0))
 							continue;
 
 						DWORD fileType = GetFileType(hTarget);
 						if (fileType == FILE_TYPE_PIPE) {
+							// query on named pipe will block, so skip it
+							// unless it has a kernel driver
+							char buf1[32];
+							sprintf_s(buf1, "0x%016x", hv);
+							files.push_back(string(buf1));
 							continue;
 						}
 
-						NTSTATUS status = ::NtQueryObject(hTarget, (OBJECT_INFORMATION_CLASS)1, nameBuffer.get(), size, nullptr);
-						::CloseHandle(hTarget);
+						NTSTATUS status;
 
-						if (!NT_SUCCESS(status))
+						Thread th([&] {
+							status = ::NtQueryObject(hTarget, (OBJECT_INFORMATION_CLASS)1, nameBuffer.get(), size, nullptr);
+							::CloseHandle(hTarget);
+						});
+						
+						th.start();
+						WaitForSingleObject(th.handle(), 500);
+
+						if (!NT_SUCCESS(status)) {
+							char buf1[32];
+							sprintf_s(buf1, "0x%016x", hv);
+							files.push_back(string(buf1));
 							continue;
-		
-						if (0) {
-							auto name = reinterpret_cast<UNICODE_STRING*>(nameBuffer.get());
-							if (name->Buffer) {
-								char* str = wchar2char(name->Buffer);
-								printf("%s\n", str);
+						}
+
+						auto name = reinterpret_cast<UNICODE_STRING*>(nameBuffer.get());
+						if (name->Buffer) {
+							char* str = wchar2char(name->Buffer);
+							
+							char realPath[1024];
+							if (GetLogicalDriveStringsA(sizeof(realPath) - 1, realPath)) {
+								char szName[MAX_PATH];
+								char szDrive[3] = " :";
+								bool bFound = 0;
+								char* p = realPath;
+
+								do {
+									*szDrive = *p;
+									if (QueryDosDeviceA(szDrive, szName, sizeof(szName))) {
+										size_t uNameLen = strlen(szName);
+										bFound = strncmp(str, szName, uNameLen) == 0 &&
+											*(str + uNameLen) == '\\';
+										if (bFound) {
+											char szTempFile[MAX_PATH];
+											sprintf_s(szTempFile, MAX_PATH, "%s%s", szDrive, str + uNameLen);
+											files.push_back(string(szTempFile));
+											//printf("%s\n", szTempFile);
+											free(str);
+										}
+									}
+									while (*p++);
+								} while (!bFound && *p);
+							}
+							else {
+								files.push_back(string(str));
+								//printf("%s\n", str);
 								free(str);
 							}
+						}
+						else {
+							char buf1[32];
+							sprintf_s(buf1, "0x%016x", hv);
+							files.push_back(string(buf1));
 						}
 					}
 				}
@@ -236,7 +284,7 @@ namespace ProcessInfo {
 			fOk = thProcesses.ProcessNext(&pe);
 		}
 
-		return files;
+		return finfo;
 	}
 
 	int getFileTypeIndex() {

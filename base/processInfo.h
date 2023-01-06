@@ -2,6 +2,7 @@
 
 #include <Windows.h>
 #include <vector>
+#include <map>
 #include "types.h"
 #include "timestamp.h"
 #include "tool.h"
@@ -9,6 +10,7 @@
 
 namespace ProcessInfo {
 	using threadsInfo = std::vector<std::pair<int, string>>;
+	using fileInfo = std::map<int, std::vector<std::string>>;
 
 	int pid();
 	string pidString();
@@ -36,6 +38,6 @@ namespace ProcessInfo {
 
 	int numThreads();
 	threadsInfo threads();
-	int openedFiles();
+	fileInfo openedFiles();
 	int getFileTypeIndex();
 }
