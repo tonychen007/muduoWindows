@@ -85,10 +85,13 @@
     <ClCompile Include="currentThread.cpp" />
     <ClCompile Include="Date.cpp" />
     <ClCompile Include="exception.cpp" />
+    <ClCompile Include="fileUtil.cpp" />
     <ClCompile Include="mutexGuard.cpp" />
+    <ClCompile Include="processInfo.cpp" />
     <ClCompile Include="thread.cpp" />
     <ClCompile Include="threadpool.cpp" />
     <ClCompile Include="timestamp.cpp" />
+    <ClCompile Include="tool.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="atomic.h" />
@@ -99,13 +102,16 @@
     <ClInclude Include="currentThread.h" />
     <ClInclude Include="date.h" />
     <ClInclude Include="exception.h" />
+    <ClInclude Include="fileUtil.h" />
     <ClInclude Include="mutexGuard.h" />
     <ClInclude Include="noncopyable.h" />
+    <ClInclude Include="processInfo.h" />
     <ClInclude Include="singleton.h" />
     <ClInclude Include="stringPiece.h" />
     <ClInclude Include="thread.h" />
     <ClInclude Include="threadpool.h" />
     <ClInclude Include="timestamp.h" />
+    <ClInclude Include="tool.h" />
     <ClInclude Include="types.h" />
     <ClInclude Include="weakCallback.h" />
   </ItemGroup>

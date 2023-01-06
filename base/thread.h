@@ -5,6 +5,7 @@
 #include "atomic.h"
 #include <thread>
 #include <functional>
+#include <Windows.h>
 
 
 class Thread:noncopyable {
@@ -22,6 +23,10 @@ public:
 	const string& name() const { return name_; }
 
 	static int64_t numCreated() { return num_.get(); }
+
+	HANDLE handle() {
+		return thread_.native_handle();
+	}
 private:
 	void setDefaultName();
 

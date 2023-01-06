@@ -25,6 +25,15 @@
     <ClCompile Include="Date.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="fileUtil.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="tool.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="processInfo.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="atomic.h">
@@ -76,6 +85,15 @@
       <Filter>header</Filter>
     </ClInclude>
     <ClInclude Include="date.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="fileUtil.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="processInfo.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="tool.h">
       <Filter>header</Filter>
     </ClInclude>
   </ItemGroup>

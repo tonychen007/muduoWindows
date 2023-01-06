@@ -14,5 +14,7 @@ int main() {
 	//testAtomic();
 	//testSingleton();
 	//testWeakCallback();
-	testDate();
+	//testDate();
+	//testReadFile();
+	testProcessInfo();
 }

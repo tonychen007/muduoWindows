@@ -24,7 +24,6 @@ void testMutex(int kThread) {
 				}
 			});
 		ths.emplace_back(th);
-
 	}
 
 	for (int i = 0; i < kThread; i++) {
@@ -536,4 +535,74 @@ void testDate() {
 		}
 	}
 	printf("All is passed\n");
+}
+
+void testReadFile() {
+	const char* filename = "../base/Date.cpp";
+	const char* buff;
+	string content;
+	int64_t fsize;
+	int64_t mtime;
+	int64_t ctime;
+	int64_t bys;
+
+	ReadSmallFile sm(filename);
+	sm.readToBuffer(nullptr);
+	buff = sm.buffer();
+
+	readFile(filename, 10, &content, &fsize, &mtime, &ctime);
+	printf("read %d, file size is %zd\n", 10, fsize);
+	buff = sm.buffer();
+
+	readFile(filename, 1024, &content, &fsize, &mtime, &ctime);
+	printf("read %d, file size is %zd\n", 1024, fsize);
+	buff = sm.buffer();
+
+	readFile(filename, 102400, &content, &fsize, &mtime, &ctime);
+	printf("read %d, file size is %zd\n", 102400, fsize);
+	buff = sm.buffer();
+	
+	AppendFile ap("z:/1.txt");
+	string line = "1234567890 abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ ";
+	for (int i = 0; i < 1000000; i++) {
+		ap.append(line.c_str(), 10);
+		bys = ap.writtenBytes();
+		ap.append(line.c_str(), line.length());
+		bys = ap.writtenBytes();
+		ap.flush();
+		bys = ap.writtenBytes();
+	}
+
+	buff = ap.buf();
+	printf("buf is %s\n", buff);
+}
+
+void testProcessInfo() {
+	CToolhelp th32;
+	
+	printf("pid=%d\n",ProcessInfo::pid());
+	printf("pidString=%s\n",ProcessInfo::pidString().c_str());
+	printf("username=%s\n",ProcessInfo::username().c_str());
+	printf("sid=%s\n", ProcessInfo::sid().c_str());
+	printf("page size=%d\n",ProcessInfo::pageSize());
+	printf("clock tick per sec=%lld\n", ProcessInfo::clockTicksPerSecond());
+	printf("hostname=%s\n", ProcessInfo::hostname().c_str());
+	printf("procname=%s\n", ProcessInfo::procname().c_str());
+
+	for (int i = 0; i < 100; i++) {
+		ProcessInfo::procname();
+	}
+	ProcessInfo::CpuTime cpuTime =  ProcessInfo::cpuTime();
+	printf("kernel time=%g\n", cpuTime.systemSeconds);
+	printf("user time=%g\n", cpuTime.userSeconds);
+
+	printf("threads=%d\n", ProcessInfo::numThreads());
+	
+	ProcessInfo::threadsInfo ths = ProcessInfo::threads();
+	/*
+	for (auto& th : ths) {
+		printf("Thread id:%d--%s\n", th.first, th.second.c_str());
+	}
+	*/
+	printf("opened files=%d\n",ProcessInfo::openedFiles());
 }

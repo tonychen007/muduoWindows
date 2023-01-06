@@ -14,7 +14,10 @@
 #include "singleton.h"
 #include "weakCallback.h"
 #include "date.h"
+#include "fileUtil.h"
+#include "processInfo.h"
 
+#include <inttypes.h>
 #include <sstream>
 #include <vector>
 #include <thread>
@@ -44,3 +47,5 @@ void testAtomic();
 void testSingleton();
 void testWeakCallback();
 void testDate();
+void testReadFile();
+void testProcessInfo();

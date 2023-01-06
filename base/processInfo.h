@@ -1,0 +1,41 @@
+#pragma once
+
+#include <Windows.h>
+#include <vector>
+#include "types.h"
+#include "timestamp.h"
+#include "tool.h"
+
+
+namespace ProcessInfo {
+	using threadsInfo = std::vector<std::pair<int, string>>;
+
+	int pid();
+	string pidString();
+	string sid();
+	string username();
+	Timestamp startTime();
+	int64_t clockTicksPerSecond();
+	int pageSize();
+	bool isDebugBuild();
+
+	string hostname();
+	string procname();
+	string procname(int id);
+
+	struct CpuTime {
+		double userSeconds;
+		double systemSeconds;
+
+		CpuTime() : userSeconds(0.0), systemSeconds(0.0) { }
+
+		double total() const { return userSeconds + systemSeconds; }
+	};
+
+	CpuTime cpuTime();
+
+	int numThreads();
+	threadsInfo threads();
+	int openedFiles();
+	int getFileTypeIndex();
+}
