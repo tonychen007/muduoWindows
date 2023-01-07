@@ -16,6 +16,8 @@
 #include "date.h"
 #include "fileUtil.h"
 #include "processInfo.h"
+#include "logStream.h"
+#include "Logging.h"
 
 #include <inttypes.h>
 #include <sstream>
@@ -49,3 +51,9 @@ void testWeakCallback();
 void testDate();
 void testReadFile();
 void testProcessInfo();
+void testBuffer1();
+void testBuffer2();
+void testBufferFmt();
+void testBufferSIIEC();
+void testBufferBench();
+void testLogging();

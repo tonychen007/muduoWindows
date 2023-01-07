@@ -34,6 +34,12 @@
     <ClCompile Include="processInfo.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="logStream.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="logging.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="atomic.h">
@@ -94,6 +100,12 @@
       <Filter>header</Filter>
     </ClInclude>
     <ClInclude Include="tool.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="logStream.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="logging.h">
       <Filter>header</Filter>
     </ClInclude>
   </ItemGroup>

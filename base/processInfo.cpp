@@ -21,6 +21,7 @@ char* wchar2char(const wchar_t* src) {
 }
 
 namespace ProcessInfo {
+	
 	int pid() {
 		DWORD pid = GetCurrentProcessId();
 		return pid;
@@ -168,7 +169,7 @@ namespace ProcessInfo {
 		return vec;
 	}
 
-	fileInfo openedFiles() {
+	fileInfo openedFiles(int getNamedPipe, int timeout, int print) {
 		fileInfo finfo;
 		int fileTypeIndex = getFileTypeIndex();
 		if (fileTypeIndex == -1) {
@@ -200,8 +201,8 @@ namespace ProcessInfo {
 				}
 
 				auto info = reinterpret_cast<PROCESS_HANDLE_SNAPSHOT_INFORMATION*>(buffer.get());
-				auto nameBuffer = std::make_unique<BYTE[]>(size);
 				for (ULONG i = 0; i < info->NumberOfHandles; i++) {
+					auto nameBuffer = std::make_unique<BYTE[]>(size);
 					if (info->Handles[i].ObjectTypeIndex == fileTypeIndex) {
 						std::vector<std::string>& files = finfo[pe.th32ProcessID];
 						HANDLE hv = info->Handles[i].HandleValue;
@@ -214,21 +215,23 @@ namespace ProcessInfo {
 						if (fileType == FILE_TYPE_PIPE) {
 							// query on named pipe will block, so skip it
 							// unless it has a kernel driver
-							char buf1[32];
-							sprintf_s(buf1, "0x%016x", hv);
-							files.push_back(string(buf1));
-							continue;
+							if (!getNamedPipe) {
+								char buf1[32];
+								sprintf_s(buf1, "0x%016x", hv);
+								files.push_back(string(buf1));
+								continue;
+							}
 						}
 
 						NTSTATUS status;
-
 						Thread th([&] {
 							status = ::NtQueryObject(hTarget, (OBJECT_INFORMATION_CLASS)1, nameBuffer.get(), size, nullptr);
 							::CloseHandle(hTarget);
 						});
-						
+
+
 						th.start();
-						WaitForSingleObject(th.handle(), 500);
+						WaitForSingleObject(th.handle(), timeout);
 
 						if (!NT_SUCCESS(status)) {
 							char buf1[32];
@@ -238,7 +241,11 @@ namespace ProcessInfo {
 						}
 
 						auto name = reinterpret_cast<UNICODE_STRING*>(nameBuffer.get());
-						if (name->Buffer) {
+						if (!name->Buffer) {
+							char buf1[32];
+							sprintf_s(buf1, "0x%016x", hv);
+							files.push_back(string(buf1));
+						} else {
 							char* str = wchar2char(name->Buffer);
 							
 							char realPath[1024];
@@ -258,23 +265,24 @@ namespace ProcessInfo {
 											char szTempFile[MAX_PATH];
 											sprintf_s(szTempFile, MAX_PATH, "%s%s", szDrive, str + uNameLen);
 											files.push_back(string(szTempFile));
-											//printf("%s\n", szTempFile);
-											free(str);
+											if (print)
+												printf("%s\n", szTempFile);
 										}
 									}
 									while (*p++);
 								} while (!bFound && *p);
-							}
-							else {
+								if (!bFound) {
+									files.push_back(string(str));
+									if (print)
+										printf("%s\n", str);
+									free(str);
+								}
+							} else { // end of GetLogicalDriveStringsA
 								files.push_back(string(str));
-								//printf("%s\n", str);
+								if (print)
+									printf("%s\n", str);
 								free(str);
 							}
-						}
-						else {
-							char buf1[32];
-							sprintf_s(buf1, "0x%016x", hv);
-							files.push_back(string(buf1));
 						}
 					}
 				}

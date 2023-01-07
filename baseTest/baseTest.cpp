@@ -16,5 +16,15 @@ int main() {
 	//testWeakCallback();
 	//testDate();
 	//testReadFile();
-	testProcessInfo();
+	//testProcessInfo();
+
+	if (0) {
+		testBuffer1();
+		testBuffer2();
+		testBufferFmt();
+		testBufferSIIEC();
+		testBufferBench();
+	}
+	
+	testLogging();
 }

@@ -609,6 +609,219 @@ void testProcessInfo() {
 	for (auto& a : fileInfo) {
 		files += a.second.size();
 	}
-	
 	printf("opened files=%d\n", files);
+}
+
+
+template<typename T, int N>
+void benchPrintf(const char* fmt) {
+	char buf[32];
+	Timestamp start(Timestamp::now());
+	for (size_t i = 0; i < N; ++i)
+		snprintf(buf, sizeof buf, fmt, (T)(i));
+	Timestamp end(Timestamp::now());
+
+	printf("benchPrintf %f\n", timeDifference(end, start));
+}
+
+template<typename T, int N>
+void benchStringStream() {
+	Timestamp start(Timestamp::now());
+	std::ostringstream os;
+
+	for (size_t i = 0; i < N; ++i) {
+		os << (T)(i);
+		os.seekp(0, std::ios_base::beg);
+	}
+	Timestamp end(Timestamp::now());
+
+	printf("benchStringStream %f\n", timeDifference(end, start));
+}
+
+template<typename T, int N>
+void benchLogStream() {
+	Timestamp start(Timestamp::now());
+	LogStream os;
+	for (size_t i = 0; i < N; ++i) {
+		os << (T)(i);
+		os.resetBuffer();
+	}
+	Timestamp end(Timestamp::now());
+
+	printf("benchLogStream %f\n", timeDifference(end, start));
+}
+
+void testBuffer1() {
+	LogStream log;
+	const LogStream::Buffer& buffer = log.buffer();
+	
+	log << true;
+	log << (uint16_t)1;
+	log << (int16_t)2;
+	log << (uint32_t)3;
+	log << (int32_t)4;
+	log << 5L;
+	log << 6UL;
+	log << 7LL;
+	log << 8ULL;
+	log << '2';
+	assert(buffer.toString().c_str(), "1123456782");
+	log.resetBuffer();
+
+	log << 3.14f;
+	log << 6.2812;
+	printf("%s\n", buffer.toString().c_str());
+
+	log.resetBuffer();
+	log << "test";
+	log << (unsigned char*)"tony";
+	log << string("string");
+	log << StringPiece("Piece");
+	log << log.buffer();
+	assert(buffer.toString().c_str(), "testtonystringPiecetesttonystringPiece");
+	log.resetBuffer();
+}
+
+void testBuffer2() {
+	LogStream os;
+	const LogStream::Buffer& buffer = os.buffer();
+
+	os << 0.0;
+	printf("%s\n", buffer.toString().c_str());
+	os.resetBuffer();
+
+	os << 1.0;
+	printf("%s\n", buffer.toString().c_str());
+	os.resetBuffer();
+
+	os << 0.1;
+	printf("%s\n", buffer.toString().c_str());
+	os.resetBuffer();
+
+	os << 0.05;
+	printf("%s\n", buffer.toString().c_str());
+	os.resetBuffer();
+
+	os << 0.15;
+	printf("%s\n", buffer.toString().c_str());
+	os.resetBuffer();
+
+	double a = 0.1;
+	os << a;
+	printf("%s\n", buffer.toString().c_str());
+	os.resetBuffer();
+
+	double b = 0.05;
+	os << b;
+	printf("%s\n", buffer.toString().c_str());
+	os.resetBuffer();
+
+	double c = 0.15;
+	os << c;
+	printf("%s\n", buffer.toString().c_str());
+	os.resetBuffer();
+
+	os << a + b;
+	printf("%s\n", buffer.toString().c_str());
+	os.resetBuffer();
+
+	os << 1.23456789;
+	printf("%s\n", buffer.toString().c_str());
+	os.resetBuffer();
+
+	os << 1.234567;
+	printf("%s\n", buffer.toString().c_str());
+	os.resetBuffer();
+
+	os << -123.456;
+	printf("%s\n", buffer.toString().c_str());
+	os.resetBuffer();
+
+	os << (void*)8888;
+	printf("%s\n", buffer.toString().c_str());
+	os.resetBuffer();
+}
+
+void testBufferFmt() {
+	LogStream os;
+	const LogStream::Buffer& buffer = os.buffer();
+
+	os << Fmt("%4d", 1);
+	os << Fmt("%4.2f", 1.2) << Fmt("%4lld", 3LL);
+	printf("%s\n", buffer.toString().c_str());
+	os.resetBuffer();
+}
+
+void testBufferSIIEC() {
+	assert(formatSI(0) == string("0"));
+	assert(formatSI(999) == string("999"));
+	assert(formatSI(1000) == string("1.00k"));
+	assert(formatSI(9990) == string("9.99k"));
+	assert(formatSI(9994) == string("9.99k"));
+	assert(formatSI(9995) == string("10.0k"));
+	assert(formatSI(10000) == string("10.0k"));
+	assert(formatSI(10049) == string("10.0k"));
+	assert(formatSI(10050) == string("10.1k"));
+	assert(formatSI(99900) == string("99.9k"));
+	assert(formatSI(99949) == string("99.9k"));
+	assert(formatSI(99950) == string("100k"));
+	assert(formatSI(100499) == string("100k"));
+	assert(formatSI(100501) == string("101k"));
+	assert(formatSI(100500) == string("101k"));
+	assert(formatSI(999499) == string("999k"));
+	assert(formatSI(999500) == string("1.00M"));
+	assert(formatSI(1004999) == string("1.00M"));
+	assert(formatSI(1005000) == string("1.01M"));
+	assert(formatSI(1005001) == string("1.01M"));
+	assert(formatSI(INT64_MAX) == string("9.22E"));
+
+	assert(formatIEC(0) == string("0"));
+	assert(formatIEC(1023) == string("1023"));
+	assert(formatIEC(1024) == string("1.00Ki"));
+	assert(formatIEC(10234) == string("9.99Ki"));
+	assert(formatIEC(10235) == string("10.0Ki"));
+	assert(formatIEC(10240) == string("10.0Ki"));
+	assert(formatIEC(10291) == string("10.0Ki"));
+	assert(formatIEC(10292) == string("10.1Ki"));
+	assert(formatIEC(102348) == string("99.9Ki"));
+	assert(formatIEC(102349) == string("100Ki"));
+	assert(formatIEC(102912) == string("100Ki"));
+	assert(formatIEC(102913) == string("101Ki"));
+	assert(formatIEC(1022976) == string("999Ki"));
+	assert(formatIEC(1047552) == string("1023Ki"));
+	assert(formatIEC(1047961) == string("1023Ki"));
+	assert(formatIEC(1048063) == string("1023Ki"));
+	assert(formatIEC(1048064) == string("1.00Mi"));
+	assert(formatIEC(1048576) == string("1.00Mi"));
+	assert(formatIEC(10480517) == string("9.99Mi"));
+	assert(formatIEC(10480518) == string("10.0Mi"));
+	assert(formatIEC(INT64_MAX) == string("8.00Ei"));
+}
+
+void testBufferBench() {
+	const int N = 5000000;
+
+	puts("int");
+	benchPrintf<int, N>("%d");
+	benchStringStream<int, N>();
+	benchLogStream<int, N>();
+
+	puts("double");
+	benchPrintf<double, N>("%.12g");
+	benchStringStream<double, N>();
+	benchLogStream<double, N>();
+
+	puts("int64_t");
+	benchPrintf<int64_t, N>("%" PRId64);
+	benchStringStream<int64_t, N>();
+	benchLogStream<int64_t, N>();
+
+	puts("void*");
+	benchPrintf<void*, N>("%p");
+	benchStringStream<void*, N>();
+	benchLogStream<void*, N>();
+}
+
+void testLogging() {
+	Logger::SourceFile file("11");
 }

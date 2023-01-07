@@ -86,6 +86,8 @@
     <ClCompile Include="Date.cpp" />
     <ClCompile Include="exception.cpp" />
     <ClCompile Include="fileUtil.cpp" />
+    <ClCompile Include="logging.cpp" />
+    <ClCompile Include="logStream.cpp" />
     <ClCompile Include="mutexGuard.cpp" />
     <ClCompile Include="processInfo.cpp" />
     <ClCompile Include="thread.cpp" />
@@ -103,6 +105,8 @@
     <ClInclude Include="date.h" />
     <ClInclude Include="exception.h" />
     <ClInclude Include="fileUtil.h" />
+    <ClInclude Include="logging.h" />
+    <ClInclude Include="logStream.h" />
     <ClInclude Include="mutexGuard.h" />
     <ClInclude Include="noncopyable.h" />
     <ClInclude Include="processInfo.h" />

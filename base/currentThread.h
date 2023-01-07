@@ -4,8 +4,6 @@
 #include <vector>
 #include "types.h"
 
-#define __thread _declspec(thread)
-
 namespace CurrentThread {
     extern __thread int t_cachedTid;
     extern __thread char t_tidString[32];
