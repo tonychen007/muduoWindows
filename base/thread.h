@@ -27,6 +27,7 @@ public:
 	HANDLE handle() {
 		return thread_.native_handle();
 	}
+	
 private:
 	void setDefaultName();
 

@@ -114,7 +114,8 @@ void AppendFile::append(const char* logline, size_t len) {
 			int err = ferror(fp_);
 			if (err) {
 				char buf[256];
-				fprintf(stderr, "AppendFile::append() failed %s\n", strerror_s(buf, sizeof(buf), errno));
+				strerror_s(buf, sizeof(buf), errno);
+				fprintf(stderr, "AppendFile::append() failed %s\n", buf);
 				break;
 			}
 		}

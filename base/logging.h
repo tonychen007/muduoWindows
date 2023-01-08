@@ -81,6 +81,8 @@ private:
 
 extern Logger::LogLevel g_logLevel;
 
+Logger::LogLevel initLogLevel();
+
 inline Logger::LogLevel Logger::logLevel() {
     return g_logLevel;
 }

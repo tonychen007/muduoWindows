@@ -43,7 +43,7 @@
 #include <iosfwd>    // for ostream forward-declaration
 #include "types.h"
 
-using namespace std;
+//using namespace std;
 
 	// For passing C-style string argument to a function.
 class StringArg {

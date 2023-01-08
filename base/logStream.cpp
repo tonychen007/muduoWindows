@@ -175,6 +175,12 @@ void LogStream::formatInteger(T v) {
     }
 }
 
+template<int SIZE>
+const char* FixedBuffer<SIZE>::debugString() {
+    *cur_ = '\0';
+    return data_;
+}
+
 template<typename T>
 Fmt::Fmt(const char* fmt, T val) {
     static_assert(std::is_arithmetic<T>::value == true, "Must be arithmetic type");

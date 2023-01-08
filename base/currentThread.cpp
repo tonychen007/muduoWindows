@@ -17,7 +17,7 @@ namespace CurrentThread {
 		if (t_cachedTid == 0) {
 			std::thread::id id = std::this_thread::get_id();
 			t_cachedTid =  *reinterpret_cast<int*>(&id);
-			snprintf(t_tidString, sizeof t_tidString, "%5d", t_cachedTid);
+			snprintf(t_tidString, sizeof t_tidString, "%6d", t_cachedTid);
 		}
 	}
 
@@ -38,7 +38,7 @@ namespace CurrentThread {
 #endif
         
     string basename(const string& file) {
-        unsigned int i = file.find_last_of("\\/");
+        size_t i = file.find_last_of("\\/");
         if (i == string::npos) {
             return file;
         }

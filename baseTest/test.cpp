@@ -1,5 +1,8 @@
 #include "test.h"
 
+int64_t g_total;
+FILE* g_file;
+
 int getThreadId(std::thread& th) {
 	std::thread::id id = th.get_id();
 	return *reinterpret_cast<int*>(&id);
@@ -141,7 +144,6 @@ void testCondition() {
 	}
 
 	printf("All is done.\n");
-	getchar();
 }
 
 void foo() {
@@ -604,12 +606,12 @@ void testProcessInfo() {
 		printf("Thread id:%d--%s\n", th.first, th.second.c_str());
 	}
 	*/
-	int files = 0;
+	size_t files = 0;
 	ProcessInfo::fileInfo fileInfo = ProcessInfo::openedFiles();
 	for (auto& a : fileInfo) {
 		files += a.second.size();
 	}
-	printf("opened files=%d\n", files);
+	printf("opened files=%zd\n", files);
 }
 
 
@@ -665,7 +667,7 @@ void testBuffer1() {
 	log << 7LL;
 	log << 8ULL;
 	log << '2';
-	assert(buffer.toString().c_str(), "1123456782");
+	assert(buffer.toString() == string("1123456782"));
 	log.resetBuffer();
 
 	log << 3.14f;
@@ -678,7 +680,7 @@ void testBuffer1() {
 	log << string("string");
 	log << StringPiece("Piece");
 	log << log.buffer();
-	assert(buffer.toString().c_str(), "testtonystringPiecetesttonystringPiece");
+	assert(buffer.toString() == string("testtonystringPiecetesttonystringPiece"));
 	log.resetBuffer();
 }
 
@@ -822,6 +824,78 @@ void testBufferBench() {
 	benchLogStream<void*, N>();
 }
 
+void dummyOutput(const char* msg, int len) {
+	g_total += len;
+	if (g_file) {
+		fwrite(msg, 1, len, g_file);
+	}
+}
+
+void logInThread() {
+	LOG_INFO << "logInThread";
+	Sleep(100);
+}
+
+void bench(const char* type, bool kLongLog = false) {
+	Logger::setOutput(dummyOutput);
+	Timestamp start(Timestamp::now());
+	g_total = 0;
+
+	int n = 100 * 100;
+	string empty = " ";
+	string longStr(3000, 'X');
+	longStr += " ";
+	for (int i = 0; i < n; ++i) {
+		LOG_INFO << "Hello 0123456789" << " abcdefghijklmnopqrstuvwxyz"
+			<< (kLongLog ? longStr : empty)
+			<< i;
+	}
+	Timestamp end(Timestamp::now());
+	double seconds = timeDifference(end, start);
+	printf("%12s: %f seconds, %lld bytes, %10.2f msg/s, %.2f MiB/s\n",
+		type, seconds, g_total, n / seconds, g_total / seconds / (1024 * 1024));
+}
+
 void testLogging() {
-	Logger::SourceFile file("11");
+	_putenv_s("MUDUO_LOG_DEBUG", "1");
+	g_logLevel = initLogLevel();
+	char buffer[64 * 1024];
+	
+	Threadpool pool("pool");
+	pool.start(5);
+	pool.run(logInThread);
+	pool.run(logInThread);
+	pool.run(logInThread);
+	pool.run(logInThread);
+	pool.run(logInThread);
+
+	LOG_TRACE << "trace";
+	LOG_DEBUG << "debug";
+	LOG_INFO << "Hello";
+	LOG_WARN << "World";
+	LOG_ERROR << "Error";
+	LOG_INFO << sizeof(Logger);
+	LOG_INFO << sizeof(LogStream);
+	LOG_INFO << sizeof(Fmt);
+	LOG_INFO << sizeof(LogStream::Buffer);
+	Sleep(1000);
+
+	fopen_s(&g_file, "z:/null", "w");
+	setvbuf(g_file, buffer, _IOFBF, sizeof buffer);
+	bench("z:/null");
+	fclose(g_file);
+
+	fopen_s(&g_file, "z:/null", "w");
+	setvbuf(g_file, buffer, _IOFBF, sizeof buffer);
+	bench("z:/null", true);
+	fclose(g_file);
+
+	g_file = stdout;
+	Sleep(1000);
+	LOG_TRACE << "trace CST";
+	LOG_DEBUG << "debug CST";
+	LOG_INFO << "Hello CST";
+	LOG_WARN << "World CST";
+	LOG_ERROR << "Error CST";
+	
 }

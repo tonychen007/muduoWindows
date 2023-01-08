@@ -83,7 +83,7 @@
   <ItemGroup>
     <ClCompile Include="countDownLatch.cpp" />
     <ClCompile Include="currentThread.cpp" />
-    <ClCompile Include="Date.cpp" />
+    <ClCompile Include="date.cpp" />
     <ClCompile Include="exception.cpp" />
     <ClCompile Include="fileUtil.cpp" />
     <ClCompile Include="logging.cpp" />
@@ -93,6 +93,7 @@
     <ClCompile Include="thread.cpp" />
     <ClCompile Include="threadpool.cpp" />
     <ClCompile Include="timestamp.cpp" />
+    <ClCompile Include="timezone.cpp" />
     <ClCompile Include="tool.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -115,6 +116,7 @@
     <ClInclude Include="thread.h" />
     <ClInclude Include="threadpool.h" />
     <ClInclude Include="timestamp.h" />
+    <ClInclude Include="timezone.h" />
     <ClInclude Include="tool.h" />
     <ClInclude Include="types.h" />
     <ClInclude Include="weakCallback.h" />

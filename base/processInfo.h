@@ -38,6 +38,6 @@ namespace ProcessInfo {
 
 	int numThreads();
 	threadsInfo threads();
-	fileInfo openedFiles(int getNamedPipe = 1, int timeout = 200, int print = 0);
+	fileInfo openedFiles(int getNamedPipe = 1, int timeout = 500, int print = 0);
 	int getFileTypeIndex();
 }

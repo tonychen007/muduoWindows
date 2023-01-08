@@ -17,13 +17,13 @@ int main() {
 	//testDate();
 	//testReadFile();
 	//testProcessInfo();
-
-	if (0) {
+	
+	if (1) {
 		testBuffer1();
 		testBuffer2();
 		testBufferFmt();
 		testBufferSIIEC();
-		testBufferBench();
+		//testBufferBench();
 	}
 	
 	testLogging();

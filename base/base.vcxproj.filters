@@ -22,7 +22,7 @@
     <ClCompile Include="timestamp.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="Date.cpp">
+    <ClCompile Include="date.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="fileUtil.cpp">
@@ -38,6 +38,9 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="logging.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="timezone.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
@@ -106,6 +109,9 @@
       <Filter>header</Filter>
     </ClInclude>
     <ClInclude Include="logging.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="timezone.h">
       <Filter>header</Filter>
     </ClInclude>
   </ItemGroup>

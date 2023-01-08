@@ -217,25 +217,27 @@ namespace ProcessInfo {
 							// unless it has a kernel driver
 							if (!getNamedPipe) {
 								char buf1[32];
-								sprintf_s(buf1, "0x%016x", hv);
+								sprintf_s(buf1, "0x%016x", (int)hv);
 								files.push_back(string(buf1));
 								continue;
 							}
 						}
 
 						NTSTATUS status;
+						
 						Thread th([&] {
 							status = ::NtQueryObject(hTarget, (OBJECT_INFORMATION_CLASS)1, nameBuffer.get(), size, nullptr);
 							::CloseHandle(hTarget);
-						});
-
-
+							});
+						
 						th.start();
 						WaitForSingleObject(th.handle(), timeout);
+						TerminateThread(th.handle(), -1);
+						
 
 						if (!NT_SUCCESS(status)) {
 							char buf1[32];
-							sprintf_s(buf1, "0x%016x", hv);
+							sprintf_s(buf1, "0x%016x", (int)hv);
 							files.push_back(string(buf1));
 							continue;
 						}
@@ -243,7 +245,7 @@ namespace ProcessInfo {
 						auto name = reinterpret_cast<UNICODE_STRING*>(nameBuffer.get());
 						if (!name->Buffer) {
 							char buf1[32];
-							sprintf_s(buf1, "0x%016x", hv);
+							sprintf_s(buf1, "0x%016x", (int)hv);
 							files.push_back(string(buf1));
 						} else {
 							char* str = wchar2char(name->Buffer);
@@ -286,9 +288,9 @@ namespace ProcessInfo {
 						}
 					}
 				}
+				CloseHandle(hP);
 			}
-
-			CloseHandle(hP);
+			
 			fOk = thProcesses.ProcessNext(&pe);
 		}
 

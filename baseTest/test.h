@@ -26,6 +26,7 @@
 #include <memory>
 #include <map>
 #include <chrono>
+#include <stdlib.h>
 
 using namespace std;
 using namespace chrono;
