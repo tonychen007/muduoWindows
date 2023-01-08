@@ -43,6 +43,9 @@
     <ClCompile Include="timezone.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="logFile.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="atomic.h">
@@ -112,6 +115,9 @@
       <Filter>header</Filter>
     </ClInclude>
     <ClInclude Include="timezone.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="logFile.h">
       <Filter>header</Filter>
     </ClInclude>
   </ItemGroup>

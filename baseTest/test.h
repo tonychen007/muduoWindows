@@ -18,6 +18,7 @@
 #include "processInfo.h"
 #include "logStream.h"
 #include "Logging.h"
+#include "logFile.h"
 
 #include <inttypes.h>
 #include <sstream>
@@ -58,3 +59,4 @@ void testBufferFmt();
 void testBufferSIIEC();
 void testBufferBench();
 void testLogging();
+void testLogFile();

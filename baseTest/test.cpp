@@ -2,6 +2,7 @@
 
 int64_t g_total;
 FILE* g_file;
+std::unique_ptr<LogFile> g_logFile;
 
 int getThreadId(std::thread& th) {
 	std::thread::id id = th.get_id();
@@ -564,7 +565,7 @@ void testReadFile() {
 	printf("read %d, file size is %zd\n", 102400, fsize);
 	buff = sm.buffer();
 	
-	AppendFile ap("z:/1.txt");
+	AppendFile ap("1.txt");
 	string line = "1234567890 abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ ";
 	for (int i = 0; i < 1000000; i++) {
 		ap.append(line.c_str(), 10);
@@ -577,6 +578,7 @@ void testReadFile() {
 
 	buff = ap.buf();
 	printf("buf is %s\n", buff);
+	remove("1.txt");
 }
 
 void testProcessInfo() {
@@ -880,15 +882,17 @@ void testLogging() {
 	LOG_INFO << sizeof(LogStream::Buffer);
 	Sleep(1000);
 
-	fopen_s(&g_file, "z:/null", "w");
+	fopen_s(&g_file, "null", "w");
 	setvbuf(g_file, buffer, _IOFBF, sizeof buffer);
-	bench("z:/null");
+	bench("null");
 	fclose(g_file);
+	remove("null");
 
-	fopen_s(&g_file, "z:/null", "w");
+	fopen_s(&g_file, "null", "w");
 	setvbuf(g_file, buffer, _IOFBF, sizeof buffer);
-	bench("z:/null", true);
+	bench("null", true);
 	fclose(g_file);
+	remove("null");
 
 	g_file = stdout;
 	Sleep(1000);
@@ -897,5 +901,25 @@ void testLogging() {
 	LOG_INFO << "Hello CST";
 	LOG_WARN << "World CST";
 	LOG_ERROR << "Error CST";
-	
+}
+
+void outputFunc(const char* msg, int len) {
+	g_logFile->append(msg, len);
+}
+
+void flushFunc() {
+	g_logFile->flush();
+}
+
+void testLogFile() {
+	Logger::setOutput(outputFunc);
+	Logger::setFlush(flushFunc);
+	g_logFile.reset(new LogFile("1.log", 1024*1024));
+
+	string line = "1234567890 abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ ";
+
+	for (int i = 0; i < 10000; ++i)
+		LOG_INFO << line;
+
+	g_logFile.get()->deleteLogFiles();
 }

@@ -47,6 +47,7 @@ public:
 	void flush();
 	int64_t writtenBytes() const { return writtenBytes_; }
 	const char* buf() const { return buf_; }
+	void close() { fclose(fp_); }
 
 	static const int kBufferSize = 64*1024;
 private:

@@ -17,14 +17,12 @@ int main() {
 	//testDate();
 	//testReadFile();
 	//testProcessInfo();
-	
-	if (1) {
-		testBuffer1();
-		testBuffer2();
-		testBufferFmt();
-		testBufferSIIEC();
-		//testBufferBench();
-	}
-	
-	testLogging();
+	//testBuffer1();
+	//testBuffer2();
+	//testBufferFmt();
+	//testBufferSIIEC();
+	//testBufferBench();
+	//testLogging();
+	testLogFile();
+
 }
