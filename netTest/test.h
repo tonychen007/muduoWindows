@@ -1,5 +1,8 @@
 #pragma once
 
-#include "net/test.h"
+#include <assert.h>
+#include "net/socketsOps.h"
+#include "base/logging.h"
+#include <Windows.h>
 
-void testFoo();
+void testSocketOps();

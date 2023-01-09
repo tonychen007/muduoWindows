@@ -122,7 +122,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>..\$(PlatformName)\$(Configuration)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>net.lib;base.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>net.lib;base.lib;ws2_32.lib;iphlpapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -141,7 +141,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>..\$(PlatformName)\$(Configuration)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>net.lib;base.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>net.lib;base.lib;ws2_32.lib;iphlpapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>

@@ -15,12 +15,18 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="test.cpp">
+    <ClCompile Include="socketsOps.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="test.h">
+    <ClInclude Include="endian.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="socketsOps.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="types.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
   </ItemGroup>
