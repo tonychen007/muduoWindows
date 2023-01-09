@@ -90,6 +90,7 @@ void testSocketOps() {
 	sockets::toIpPort(buf, sizeof(buf), (sockaddr*)&addr6);
 	LOG_INFO << "Peer addr:" << buf;
 
+	sockets::isSelfConnect(s);
 	sockets::close(s);
 	sockets::DestorySocket();
 }

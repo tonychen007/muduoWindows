@@ -38,5 +38,5 @@ namespace sockets {
 
 	struct sockaddr_in6 getLocalAddr(int sockfd);
 	struct sockaddr_in6 getPeerAddr(int sockfd);
-	bool isSelfConnect();
+	bool isSelfConnect(int sockfd);
 }
