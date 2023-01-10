@@ -24,6 +24,24 @@
     <ClCompile Include="socket.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
+    <ClCompile Include="timer.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="poller.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="channel.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="eventLoop.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="defaultPoller.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="selectPoller.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="endian.h">
@@ -39,6 +57,30 @@
       <Filter>標頭檔</Filter>
     </ClInclude>
     <ClInclude Include="socket.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="callbacks.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="timer.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="timerId.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="poll.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="eventLoop.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="poller.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="channel.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="selectPoller.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
   </ItemGroup>

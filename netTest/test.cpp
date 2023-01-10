@@ -168,3 +168,29 @@ void testSocketServer() {
 	buf[bys] = '\0';
 	printf("read buf:%s\n", buf);
 }
+
+void testTimer() {
+	net::Timer timer([] {
+		printf("Timer callback\n");
+		}, Timestamp::now(), 1);
+
+	timer.run();
+	timer.repeat();
+	timer.restart(Timestamp::now());
+	int64_t s = timer.numCreated();
+	Timestamp expr = timer.expiration();
+	printf("%s\n",expr.toString().c_str());
+}
+
+void testEventloop() {
+	net::EventLoop loop;
+	
+	Thread th([&] {
+		LOG_INFO << "threadFunc:pid = " << CurrentThread::tid();
+		loop.runInLoop([&] {
+			LOG_INFO << "func:pid = " << CurrentThread::tid();
+		});
+	});
+	th.start();
+	loop.loop();
+}

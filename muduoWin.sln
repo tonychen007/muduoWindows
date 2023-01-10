@@ -11,12 +11,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "baseTest", "baseTest\baseTe
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "net", "net\net.vcxproj", "{30682762-9097-474C-9CD7-90C11C68123A}"
-	ProjectSection(ProjectDependencies) = postProject
-		{14679E2B-E0C1-4038-AAF1-F7E491233A9F} = {14679E2B-E0C1-4038-AAF1-F7E491233A9F}
-	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "netTest", "netTest\netTest.vcxproj", "{4F16FFE9-A232-4A2D-8D8A-3F8A9284A1D4}"
 	ProjectSection(ProjectDependencies) = postProject
+		{14679E2B-E0C1-4038-AAF1-F7E491233A9F} = {14679E2B-E0C1-4038-AAF1-F7E491233A9F}
 		{30682762-9097-474C-9CD7-90C11C68123A} = {30682762-9097-474C-9CD7-90C11C68123A}
 	EndProjectSection
 EndProject

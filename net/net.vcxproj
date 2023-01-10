@@ -19,15 +19,29 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="channel.cpp" />
+    <ClCompile Include="defaultPoller.cpp" />
+    <ClCompile Include="eventLoop.cpp" />
     <ClCompile Include="inetAddress.cpp" />
+    <ClCompile Include="poller.cpp" />
+    <ClCompile Include="selectPoller.cpp" />
     <ClCompile Include="socket.cpp" />
     <ClCompile Include="socketsOps.cpp" />
+    <ClCompile Include="timer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="callbacks.h" />
+    <ClInclude Include="channel.h" />
     <ClInclude Include="endian.h" />
+    <ClInclude Include="eventLoop.h" />
     <ClInclude Include="inetAddress.h" />
+    <ClInclude Include="poll.h" />
+    <ClInclude Include="poller.h" />
+    <ClInclude Include="selectPoller.h" />
     <ClInclude Include="socket.h" />
     <ClInclude Include="socketsOps.h" />
+    <ClInclude Include="timer.h" />
+    <ClInclude Include="timerId.h" />
     <ClInclude Include="types.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

@@ -1,11 +1,11 @@
 #pragma once
 
+#include <Windows.h>
 #include "noncopyable.h"
 #include "types.h"
 #include "atomic.h"
 #include <thread>
 #include <functional>
-#include <Windows.h>
 
 
 class Thread:noncopyable {

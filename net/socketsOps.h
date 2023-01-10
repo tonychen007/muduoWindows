@@ -6,6 +6,11 @@
 
 
 namespace sockets {
+	typedef struct _stPipe {
+		int pipe_read;
+		int pipe_write;
+	} stPipe;
+
 	void InitSocket();
 	void DestorySocket();
 
@@ -40,4 +45,6 @@ namespace sockets {
 	struct sockaddr_in6 getLocalAddr(int sockfd);
 	struct sockaddr_in6 getPeerAddr(int sockfd);
 	bool isSelfConnect(int sockfd);
+
+	stPipe pipe();
 }
