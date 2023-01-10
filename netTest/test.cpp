@@ -32,7 +32,7 @@ const char* buildHttpMsg(char* buffer, int size) {
 	i += sprintf_s(buffer + strlen(buffer), size - i, "Connection: close\r\n");
 	i += sprintf_s(buffer + strlen(buffer), size - i, "User-Agent: honpwc web_get 1.0\r\n");
 	i += sprintf_s(buffer + strlen(buffer), size - i, "\r\n");
-	
+
 	return buffer;
 }
 
@@ -51,7 +51,7 @@ void testSocketOps() {
 
 	getAddrInfo(&addr, hostname, port, AF_INET);
 	ret = sockets::connect(s, addr->ai_addr);
-	
+
 	fd_set reads;
 	fd_set writes;
 	FD_ZERO(&reads);
@@ -97,7 +97,7 @@ void testSocketOps() {
 	addr6 = sockets::getLocalAddr(s);
 	sockets::toIpPort(buf, sizeof(buf), (sockaddr*)&addr6);
 	LOG_INFO << "Local addr:" << buf;
-	
+
 	addr6 = sockets::getPeerAddr(s);
 	sockets::toIpPort(buf, sizeof(buf), (sockaddr*)&addr6);
 	LOG_INFO << "Peer addr:" << buf;
@@ -113,7 +113,7 @@ void testInetAddress() {
 	net::InetAddress inetAddr2("0.0.0.0", 1234);
 	net::InetAddress outAddr;
 	net::InetAddress::resolve("www.baidu.com", &outAddr);
-	
+
 	LOG_INFO << "IpPort is:" << inetAddr1.toIpPort();
 	LOG_INFO << "Ipv4:" << inetAddr1.ipv4NetEndian();
 	LOG_INFO << "port:" << inetAddr1.port();
@@ -129,7 +129,7 @@ void testSocketClient() {
 	getAddrInfo(&addr, hostname, port, AF_INET);
 	int ret = sockets::connect(s, addr->ai_addr);
 	net::Socket sock(s);
-	
+
 	fd_set writes;
 	FD_ZERO(&writes);
 	FD_SET(s, &writes);
@@ -154,7 +154,7 @@ void testSocketServer() {
 	sock.listen();
 	int connfd = sock.accept(&peerAddr);
 	ssize_t bys = 0;
-	
+
 	// use while easy for test
 	char buf[512];
 	sockets::read(connfd, buf, sizeof(buf));
@@ -179,18 +179,52 @@ void testTimer() {
 	timer.restart(Timestamp::now());
 	int64_t s = timer.numCreated();
 	Timestamp expr = timer.expiration();
-	printf("%s\n",expr.toString().c_str());
+	printf("%s\n", expr.toString().c_str());
 }
 
 void testEventloop() {
+	//_putenv_s("MUDUO_LOG_TRACE", "1");
+	//g_logLevel = initLogLevel();
+
 	net::EventLoop loop;
-	
-	Thread th([&] {
+
+	Thread th1([&] {
 		LOG_INFO << "threadFunc:pid = " << CurrentThread::tid();
 		loop.runInLoop([&] {
 			LOG_INFO << "func:pid = " << CurrentThread::tid();
+			});
 		});
-	});
-	th.start();
+
+	th1.start();
+	loop.loop();
+}
+
+int g_cnt = 0;
+
+void print(const char* msg, net::EventLoop* pLoop) {
+	LOG_INFO << "time:" << Timestamp::now().toFormattedString() << " msg:" << msg;
+	if (++g_cnt == 100) {
+		pLoop->quit();
+	}
+}
+
+void cancel(TimerId timer, net::EventLoop* pLoop) {
+	pLoop->cancel(timer);
+	printf("cancelled at %s\n", Timestamp::now().toString().c_str());
+}
+
+void testTimerQueue() {
+	net::EventLoop loop;
+	
+	loop.runAfter(1, std::bind(print, "once1", &loop));
+	loop.runAfter(2.5, std::bind(print, "once2.5", &loop));
+	loop.runAfter(3, std::bind(print, "once3", &loop));
+	TimerId t45 = loop.runAfter(4.5, std::bind(print, "once4.5", &loop));
+	loop.runAfter(4.2, std::bind(cancel, t45, &loop));
+	loop.runAfter(4.8, std::bind(cancel, t45, &loop));
+	loop.runEvery(2, std::bind(print, "every2", &loop));
+	TimerId t3 = loop.runEvery(3, std::bind(print, "every3", &loop));
+	loop.runAfter(9.001, std::bind(cancel, t3, &loop));
+
 	loop.loop();
 }

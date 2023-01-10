@@ -42,6 +42,9 @@
     <ClCompile Include="selectPoller.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
+    <ClCompile Include="timerQueue.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="endian.h">
@@ -81,6 +84,12 @@
       <Filter>標頭檔</Filter>
     </ClInclude>
     <ClInclude Include="selectPoller.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="timerQueue.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="timeMinHeap.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
   </ItemGroup>

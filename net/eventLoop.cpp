@@ -3,8 +3,7 @@
 #include "eventLoop.h"
 #include "channel.h"
 #include "poller.h"
-
-//#include "timerQueue.h"
+#include "timerQueue.h"
 
 #include <algorithm>
 
@@ -28,10 +27,10 @@ namespace net {
 		iteration_(0),
 		threadId_(CurrentThread::tid()),
 		poller_(Poller::newDefaultPoller(this)),
-		//timerQueue_(new TimerQueue(this)),
 		wakeupFd_(sockets::pipe()),
 		wakeupChannel_(new Channel(this, wakeupFd_.pipe_read)),
-		currentActiveChannel_(NULL) {
+		currentActiveChannel_(NULL),
+		timerQueue_(new TimerQueue(this)) {
 
 		LOG_DEBUG << "EventLoop created " << this << " in thread " << threadId_;
 		if (t_loopInThisThread) {
@@ -41,8 +40,7 @@ namespace net {
 			t_loopInThisThread = this;
 		}
 
-		wakeupChannel_->setReadCallback(
-			std::bind(&EventLoop::handleRead, this));
+		wakeupChannel_->setReadCallback(std::bind(&EventLoop::handleRead, this));
 		// we are always reading the wakeupfd
 		wakeupChannel_->enableReading();
 	}
@@ -66,13 +64,14 @@ namespace net {
 
 		while (!quit_) {
 			activeChannels_.clear();
-			pollReturnTime_ = poller_->poll(kPollTimeMs, &activeChannels_);
+			pollReturnTime_ = poller_->poll(timerQueue_->earliestExpiredTime(Timestamp::now()), &activeChannels_);
 			++iteration_;
 			if (Logger::logLevel() <= Logger::ETRACE) {
 				printActiveChannels();
 			}
 			// TODO sort channel by priority
 			eventHandling_ = true;
+			timerQueue_->expiredProcess(pollReturnTime_);
 			for (Channel* channel : activeChannels_) {
 				currentActiveChannel_ = channel;
 				currentActiveChannel_->handleEvent(pollReturnTime_);
@@ -122,8 +121,7 @@ namespace net {
 	}
 
 	TimerId EventLoop::runAt(Timestamp time, TimerCallback cb) {
-		//return timerQueue_->addTimer(std::move(cb), time, 0.0);
-		return TimerId();
+		return timerQueue_->addTimer(std::move(cb), time, 0.0);
 	}
 
 	TimerId EventLoop::runAfter(double delay, TimerCallback cb) {
@@ -133,12 +131,11 @@ namespace net {
 
 	TimerId EventLoop::runEvery(double interval, TimerCallback cb) {
 		Timestamp time(addTime(Timestamp::now(), interval));
-		//return timerQueue_->addTimer(std::move(cb), time, interval);
-		return TimerId();
+		return timerQueue_->addTimer(std::move(cb), time, interval);
 	}
 
 	void EventLoop::cancel(TimerId timerId) {
-		//return timerQueue_->cancel(timerId);
+		return timerQueue_->cancel(timerId);
 	}
 
 	void EventLoop::updateChannel(Channel* channel) {

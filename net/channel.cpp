@@ -1,7 +1,6 @@
 #include "base/Logging.h"
 #include "channel.h"
 #include "eventLoop.h"
-#include "poll.h"
 
 #include <sstream>
 
@@ -78,7 +77,7 @@ void Channel::handleEventWithGuard(Timestamp receiveTime) {
     if (revents_ & (POLLERR | POLLNVAL)) {
         if (errorCallback_) errorCallback_();
     }
-    if (revents_ & (POLLIN | POLLPRI | POLLRDHUP)) {
+    if (revents_ & (POLLIN | POLLPRI)) {
         if (readCallback_) readCallback_(receiveTime);
     }
     if (revents_ & POLLOUT) {
@@ -107,8 +106,6 @@ string Channel::eventsToString(int fd, int ev) {
         oss << "OUT ";
     if (ev & POLLHUP)
         oss << "HUP ";
-    if (ev & POLLRDHUP)
-        oss << "RDHUP ";
     if (ev & POLLERR)
         oss << "ERR ";
     if (ev & POLLNVAL)

@@ -25,6 +25,7 @@ namespace net {
 
 		void restart(Timestamp now);
 		static int64_t numCreated() { return s_numCreated_.get(); }
+		int min_heap_idx;
 	private:
 		const TimerCallback callback_;
 		Timestamp expiration_;

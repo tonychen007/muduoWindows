@@ -29,8 +29,9 @@ Timestamp SelectPoller::poll(int timeoutMs, ChannelList* activeChannels) {
             FD_SET(itor->fd, &wfds_);
         }
         FD_SET(itor->fd, &efds_);
-        if (itor->fd > maxfd)
+        if (itor->fd > maxfd) {
             maxfd = itor->fd;
+        }
     }
 
     timeval timeout;
@@ -73,7 +74,7 @@ void SelectPoller::fillActiveChannels(int numEvents, ChannelList* activeChannels
             revents |= POLLERR;
         }
 
-        if (pfd->revents > 0) {
+        if (revents > 0) {
             --numEvents;
             ChannelMap::const_iterator ch = channels_.find(pfd->fd);
             assert(ch != channels_.end());

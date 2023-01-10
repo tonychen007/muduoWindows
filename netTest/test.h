@@ -10,6 +10,7 @@
 #include "net/poller.h"
 #include "net/channel.h"
 #include "net/eventLoop.h"
+#include "net/timerQueue.h"
 #include <Windows.h>
 
 void testSocketOps();
@@ -18,3 +19,4 @@ void testSocketClient();
 void testSocketServer();
 void testTimer();
 void testEventloop();
+void testTimerQueue();

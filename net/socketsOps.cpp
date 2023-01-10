@@ -258,6 +258,7 @@ namespace sockets {
 		name.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
 		int namelen = sizeof(name);
 		tcp1 = tcp2 = -1;
+		
 		int tcp = socket(AF_INET, SOCK_STREAM, 0);
 		if (tcp == -1) {
 			goto clean;

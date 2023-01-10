@@ -13,7 +13,7 @@
 namespace net {
 	class Channel;
 	class Poller;
-	class TimerQueue {};
+	class TimerQueue;
 
 	class EventLoop : noncopyable {
 	public:

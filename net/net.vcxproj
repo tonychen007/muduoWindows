@@ -28,6 +28,7 @@
     <ClCompile Include="socket.cpp" />
     <ClCompile Include="socketsOps.cpp" />
     <ClCompile Include="timer.cpp" />
+    <ClCompile Include="timerQueue.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="callbacks.h" />
@@ -40,8 +41,10 @@
     <ClInclude Include="selectPoller.h" />
     <ClInclude Include="socket.h" />
     <ClInclude Include="socketsOps.h" />
+    <ClInclude Include="timeMinHeap.h" />
     <ClInclude Include="timer.h" />
     <ClInclude Include="timerId.h" />
+    <ClInclude Include="timerQueue.h" />
     <ClInclude Include="types.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
