@@ -18,6 +18,12 @@
     <ClCompile Include="socketsOps.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
+    <ClCompile Include="inetAddress.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="socket.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="endian.h">
@@ -27,6 +33,12 @@
       <Filter>標頭檔</Filter>
     </ClInclude>
     <ClInclude Include="types.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="inetAddress.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="socket.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
   </ItemGroup>

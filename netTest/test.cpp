@@ -2,6 +2,19 @@
 
 #include "test.h"
 
+class GWinSock {
+public:
+	GWinSock() {
+		sockets::InitSocket();
+	}
+
+	~GWinSock() {
+		sockets::DestorySocket();
+	}
+};
+
+GWinSock gWinSock;
+
 void getAddrInfo(struct addrinfo** addr, const char* hostname, const char* port, int ip46) {
 	struct addrinfo hints;
 
@@ -24,7 +37,6 @@ const char* buildHttpMsg(char* buffer, int size) {
 }
 
 void testSocketOps() {
-	sockets::InitSocket();
 
 	char buf[2048];
 	const char* hostname = "www.baidu.com";
@@ -93,4 +105,66 @@ void testSocketOps() {
 	sockets::isSelfConnect(s);
 	sockets::close(s);
 	sockets::DestorySocket();
+}
+
+void testInetAddress() {
+	char buf[MAX_PATH];
+	net::InetAddress inetAddr1(1234, 1);
+	net::InetAddress inetAddr2("0.0.0.0", 1234);
+	net::InetAddress outAddr;
+	net::InetAddress::resolve("www.baidu.com", &outAddr);
+	
+	LOG_INFO << "IpPort is:" << inetAddr1.toIpPort();
+	LOG_INFO << "Ipv4:" << inetAddr1.ipv4NetEndian();
+	LOG_INFO << "port:" << inetAddr1.port();
+	LOG_INFO << "port netEndian:" << inetAddr1.portNetEndian();
+}
+
+void testSocketClient() {
+	const char* hostname = "www.baidu.com";
+	const char* port = "80";
+	struct addrinfo* addr;
+
+	int s = sockets::createNonblockingOrDie(AF_INET);
+	getAddrInfo(&addr, hostname, port, AF_INET);
+	int ret = sockets::connect(s, addr->ai_addr);
+	net::Socket sock(s);
+	
+	fd_set writes;
+	FD_ZERO(&writes);
+	FD_SET(s, &writes);
+
+	select(s + 1, 0, &writes, 0, nullptr);
+	if (FD_ISSET(s, &writes)) {
+		char buf[512] = { 0 };
+		sock.getTcpInfoString(buf, sizeof(buf));
+		printf("\nTcp Info:\n%s\n", buf);
+	}
+}
+
+void testSocketServer() {
+	int s = sockets::createBlockingOrDie(AF_INET);
+	net::InetAddress peerAddr;
+
+	net::Socket sock(s);
+	sock.setReuseAddr(1);
+	sock.setTcpNoDelay(1);
+	net::InetAddress listenAddr(2000, false);
+	sock.bindAddress(listenAddr);
+	sock.listen();
+	int connfd = sock.accept(&peerAddr);
+	ssize_t bys = 0;
+	
+	// use while easy for test
+	char buf[512];
+	sockets::read(connfd, buf, sizeof(buf));
+	DWORD err = GetLastError();
+	while (err == WSAEWOULDBLOCK) {
+		bys = sockets::read(connfd, buf, sizeof(buf));
+		err = GetLastError();
+		Sleep(50);
+	}
+
+	buf[bys] = '\0';
+	printf("read buf:%s\n", buf);
 }

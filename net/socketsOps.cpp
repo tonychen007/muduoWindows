@@ -21,12 +21,17 @@ namespace sockets {
 	}
 
 	int createNonblockingOrDie(sa_family_t family) {
+		int sockfd = createBlockingOrDie(family);
+		setNonBlockAndCloseOnExec(sockfd);
+		return sockfd;
+	}
+
+	int createBlockingOrDie(sa_family_t family) {
 		int sockfd = ::socket(family, SOCK_STREAM, IPPROTO_TCP);
 		if (sockfd < 0) {
 			LOG_SYSFATAL << "sockets::createNonblockingOrDie";
 		}
 
-		setNonBlockAndCloseOnExec(sockfd);
 		return sockfd;
 	}
 
@@ -49,7 +54,41 @@ namespace sockets {
 	}
 
 	int  accept(int sockfd, struct sockaddr_in6* addr) {
-		return 0;
+		socklen_t addrlen = static_cast<socklen_t>(sizeof * addr);
+		int connfd = ::accept(sockfd, sockaddr_cast(addr), &addrlen);
+		setNonBlockAndCloseOnExec(connfd);
+
+		if (connfd < 0) {
+			int savedErrno = GetLastError();
+			LOG_SYSERR << "Socket::accept";
+			switch (savedErrno) {
+			case EAGAIN:
+			case ECONNABORTED:
+			case EINTR:
+			case EPROTO: // ???
+			case EPERM:
+			case EMFILE: // per-process lmit of open file desctiptor ???
+			  // expected errors
+				errno = savedErrno;
+				break;
+			case EBADF:
+			case EFAULT:
+			case EINVAL:
+			case ENFILE:
+			case ENOBUFS:
+			case ENOMEM:
+			case ENOTSOCK:
+			case EOPNOTSUPP:
+				// unexpected errors
+				LOG_FATAL << "unexpected error of ::accept " << savedErrno;
+				break;
+			default:
+				LOG_FATAL << "unknown error of ::accept " << savedErrno;
+				break;
+			}
+		}
+
+		return connfd;
 	}
 
 	ssize_t read(int sockfd, void* buf, size_t count) {
@@ -140,24 +179,24 @@ namespace sockets {
 		}
 	}
 
-	struct sockaddr* sockets::sockaddr_cast(const struct sockaddr_in6* addr) {
-		return static_cast<struct sockaddr*>((void*)addr);
+	const struct sockaddr* sockets::sockaddr_cast(const struct sockaddr_in* addr) {
+		return static_cast<const struct sockaddr*>((const void*)addr);
+	}
+
+	const struct sockaddr* sockets::sockaddr_cast(const struct sockaddr_in6* addr) {
+		return static_cast<const struct sockaddr*>((const void*)(addr));
 	}
 
 	struct sockaddr* sockets::sockaddr_cast(struct sockaddr_in6* addr) {
 		return static_cast<struct sockaddr*>((void*)(addr));
 	}
 
-	struct sockaddr* sockets::sockaddr_cast(const struct sockaddr_in* addr) {
-		return static_cast<struct sockaddr*>((void*)(addr));
+	const struct sockaddr_in* sockets::sockaddr_in_cast(const struct sockaddr* addr) {
+		return static_cast<const struct sockaddr_in*>((const void*)(addr));
 	}
 
-	struct sockaddr_in* sockets::sockaddr_in_cast(const struct sockaddr* addr) {
-		return static_cast<struct sockaddr_in*>((void*)(addr));
-	}
-
-	struct sockaddr_in6* sockets::sockaddr_in6_cast(const struct sockaddr* addr) {
-		return static_cast<struct sockaddr_in6*>((void*)(addr));
+	const struct sockaddr_in6* sockets::sockaddr_in6_cast(const struct sockaddr* addr) {
+		return static_cast<const struct sockaddr_in6*>((const void*)(addr));
 	}
 
 	struct sockaddr_in6 getLocalAddr(int sockfd) {

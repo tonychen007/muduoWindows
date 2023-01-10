@@ -1,5 +1,8 @@
 ﻿#include "test.h"
 
 int main() {
-	testSocketOps();
+	//testSocketOps();
+	//testInetAddress();
+	//testSocketClient();
+	testSocketServer();
 }

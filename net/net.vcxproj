@@ -19,10 +19,14 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="inetAddress.cpp" />
+    <ClCompile Include="socket.cpp" />
     <ClCompile Include="socketsOps.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="endian.h" />
+    <ClInclude Include="inetAddress.h" />
+    <ClInclude Include="socket.h" />
     <ClInclude Include="socketsOps.h" />
     <ClInclude Include="types.h" />
   </ItemGroup>
