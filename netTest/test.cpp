@@ -545,3 +545,6 @@ void testTcpClient2() {
 	thr.start();
 	loop.loop();
 }
+
+void testTcpServer() {
+}

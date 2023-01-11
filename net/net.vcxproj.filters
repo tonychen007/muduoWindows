@@ -66,6 +66,9 @@
     <ClCompile Include="tcpClient.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
+    <ClCompile Include="tcpServer.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="endian.h">
@@ -132,6 +135,9 @@
       <Filter>標頭檔</Filter>
     </ClInclude>
     <ClInclude Include="tcpClient.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="tcpServer.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
   </ItemGroup>

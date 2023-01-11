@@ -18,6 +18,7 @@
 #include "net/connector.h"
 #include "net/tcpConnection.h"
 #include "net/tcpClient.h"
+#include "net/tcpServer.h"
 
 #include <chrono>
 
@@ -36,3 +37,4 @@ void testConnector();
 void testTcpConnection();
 void testTcpClient1();
 void testTcpClient2();
+void testTcpServer();
