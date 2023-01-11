@@ -21,6 +21,7 @@ Timestamp SelectPoller::poll(int timeoutMs, ChannelList* activeChannels) {
     FD_ZERO(&wfds_);
     FD_ZERO(&efds_);
     unsigned int maxfd = 0; // for select
+
     for (PollFdList::iterator itor = pollfds_.begin(); itor != pollfds_.end(); ++itor) {
         if ((itor->events) & (POLLIN | POLLPRI)) {
             FD_SET(itor->fd, &rfds_);
@@ -80,7 +81,7 @@ void SelectPoller::fillActiveChannels(int numEvents, ChannelList* activeChannels
             assert(ch != channels_.end());
             Channel* channel = ch->second;
             assert(channel->fd() == pfd->fd);
-            channel->set_revents(pfd->revents);
+            channel->set_revents(revents);
             // pfd->revents = 0;
             activeChannels->push_back(channel);
         }

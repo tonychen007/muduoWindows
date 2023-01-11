@@ -10,5 +10,7 @@ int main() {
 	//testTimerQueue();
 	//testBuffer();
 	//testEventLoopThread();
-	testEventLoopThreadPool();
+	//testEventLoopThreadPool();
+	//testAcceptor();
+	testConnector();
 }

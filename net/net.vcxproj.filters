@@ -54,6 +54,12 @@
     <ClCompile Include="eventLoopThreadPool.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
+    <ClCompile Include="acceptor.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="connector.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="endian.h">
@@ -108,6 +114,12 @@
       <Filter>標頭檔</Filter>
     </ClInclude>
     <ClInclude Include="eventLoopThreadPool.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="acceptor.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="connector.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
   </ItemGroup>

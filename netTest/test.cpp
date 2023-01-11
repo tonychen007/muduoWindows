@@ -458,3 +458,45 @@ void testEventLoopThreadPool() {
 
 	loop.loop();
 }
+
+void newConnection(int sockfd, const InetAddress& peerAddr)
+{
+	LOG_INFO << "new connection from " << peerAddr.toIpPort();
+	// can not use write in windows socket. use send 
+	sockets::write(sockfd, "hello\r\n", strlen("hello\r\n"));
+	sockets::close(sockfd);
+	LOG_INFO << "close";
+}
+
+void testAcceptor() {
+	EventLoop loop;
+	InetAddress addr(2000);
+	
+	Acceptor accp(&loop, addr, true);
+	accp.setNewConnectionCallback(newConnection);
+	accp.listen();
+	loop.loop();
+}
+
+void connectCallback(int sockfd) {
+	LOG_INFO << "connected";
+	sockets::close(sockfd);
+}
+
+void testConnector() {
+	EventLoop loop;
+	InetAddress addr(2000,1);
+
+	Acceptor accp(&loop, addr, true);
+	accp.setNewConnectionCallback(newConnection);
+	accp.listen();
+
+	std::shared_ptr<Connector> conn(new Connector(&loop, addr));
+	conn->setNewConnectionCallback(connectCallback);
+	conn->start();
+
+	loop.runAfter(3, [&] {
+		loop.quit();
+	});
+	loop.loop();
+}

@@ -18,6 +18,7 @@ namespace sockets {
 		else {
 			LOG_INFO << "Success to SetHandleInformation on socket";
 		}
+		
 	}
 
 	int createNonblockingOrDie(sa_family_t family) {

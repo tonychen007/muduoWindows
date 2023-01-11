@@ -14,6 +14,8 @@
 #include "net/eventLoopThreadPool.h"
 #include "net/timerQueue.h"
 #include "net/buffer.h"
+#include "net/acceptor.h"
+#include "net/connector.h"
 
 #include <chrono>
 
@@ -27,3 +29,5 @@ void testTimerQueue();
 void testBuffer();
 void testEventLoopThread();
 void testEventLoopThreadPool();
+void testAcceptor();
+void testConnector();

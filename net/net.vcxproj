@@ -19,8 +19,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="acceptor.cpp" />
     <ClCompile Include="buffer.cpp" />
     <ClCompile Include="channel.cpp" />
+    <ClCompile Include="connector.cpp" />
     <ClCompile Include="defaultPoller.cpp" />
     <ClCompile Include="eventLoop.cpp" />
     <ClCompile Include="eventLoopThread.cpp" />
@@ -34,9 +36,11 @@
     <ClCompile Include="timerQueue.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="acceptor.h" />
     <ClInclude Include="buffer.h" />
     <ClInclude Include="callbacks.h" />
     <ClInclude Include="channel.h" />
+    <ClInclude Include="connector.h" />
     <ClInclude Include="endian.h" />
     <ClInclude Include="eventLoop.h" />
     <ClInclude Include="eventLoopThread.h" />
