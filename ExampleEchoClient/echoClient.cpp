@@ -12,6 +12,8 @@ class EchoClient;
 std::vector<std::unique_ptr<EchoClient>> clients;
 int current = 0;
 
+string longstr(3000, 'x');
+
 class EchoClient:noncopyable {
 public:
     EchoClient(EventLoop * loop, const InetAddress & listenAddr, const string & id)
@@ -47,7 +49,7 @@ private:
             }
             LOG_INFO << "*** connected " << current;
         }
-        conn->send("world\n");
+        conn->send(longstr);
     }
 
     void onMessage(const TcpConnectionPtr & conn, Buffer * buf, Timestamp time)
@@ -75,6 +77,7 @@ private:
 
 int main(int argc, char** argv) {
     sockets::InitSocket();
+    longstr.append("\n");
 
     LOG_INFO << "pid = " << getpid() << ", tid = " << CurrentThread::tid();
     if (argc > 1)
@@ -96,7 +99,7 @@ int main(int argc, char** argv) {
             snprintf(buf, sizeof buf, "%d", i + 1);
             clients.emplace_back(new EchoClient(&loop, serverAddr, buf));
         }
-
+        
         clients[current]->connect();
         loop.loop();
     }

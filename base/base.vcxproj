@@ -83,6 +83,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="asyncLogging.cpp" />
     <ClCompile Include="countDownLatch.cpp" />
     <ClCompile Include="currentThread.cpp" />
     <ClCompile Include="date.cpp" />
@@ -100,6 +101,7 @@
     <ClCompile Include="tool.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="asyncLogging.h" />
     <ClInclude Include="atomic.h" />
     <ClInclude Include="blockingQueue.h" />
     <ClInclude Include="boundedBlockingQueue.h" />

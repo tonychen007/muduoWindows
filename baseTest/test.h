@@ -19,6 +19,7 @@
 #include "logStream.h"
 #include "Logging.h"
 #include "logFile.h"
+#include "asyncLogging.h"
 
 #include <inttypes.h>
 #include <sstream>
@@ -60,3 +61,4 @@ void testBufferSIIEC();
 void testBufferBench();
 void testLogging();
 void testLogFile();
+void testAsyncLogging();

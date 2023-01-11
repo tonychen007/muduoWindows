@@ -19,6 +19,10 @@ public:
 	void append(const char* logline, int len);
 	void flush();
 	bool rollFile();
+	std::vector<string> getLogFileNames() {
+		return logFilenames_;
+	}
+
 	void deleteLogFiles();
 private:
 	void append_unlocked(const char* logline, int len);
@@ -36,7 +40,7 @@ private:
 	time_t lastFlush_;
 	std::unique_ptr<AppendFile> file_;
 
-	std::vector<string> logFilenames;
+	std::vector<string> logFilenames_;
 
 	const static int kRollPerSeconds_ = 60 * 60 * 24;
 };

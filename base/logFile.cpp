@@ -55,7 +55,7 @@ bool LogFile::rollFile() {
         lastFlush_ = now;
         startOfPeriod_ = start;
         file_.reset(new AppendFile(filename));
-        logFilenames.push_back(filename);
+        logFilenames_.push_back(filename);
         return true;
     }
 
@@ -65,7 +65,7 @@ bool LogFile::rollFile() {
 void LogFile::deleteLogFiles() {
     file_->flush();
     file_->close();
-    for (auto& f : logFilenames) {
+    for (auto& f : logFilenames_) {
         remove(f.c_str());
     }
 }

@@ -23,6 +23,6 @@ int main() {
 	//testBufferSIIEC();
 	//testBufferBench();
 	//testLogging();
-	testLogFile();
-
+	//testLogFile();
+	testAsyncLogging();
 }
