@@ -60,6 +60,12 @@
     <ClCompile Include="connector.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
+    <ClCompile Include="tcpConnection.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="tcpClient.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="endian.h">
@@ -120,6 +126,12 @@
       <Filter>標頭檔</Filter>
     </ClInclude>
     <ClInclude Include="connector.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="tcpConnection.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="tcpClient.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
   </ItemGroup>

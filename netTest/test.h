@@ -16,6 +16,8 @@
 #include "net/buffer.h"
 #include "net/acceptor.h"
 #include "net/connector.h"
+#include "net/tcpConnection.h"
+#include "net/tcpClient.h"
 
 #include <chrono>
 
@@ -31,3 +33,6 @@ void testEventLoopThread();
 void testEventLoopThreadPool();
 void testAcceptor();
 void testConnector();
+void testTcpConnection();
+void testTcpClient1();
+void testTcpClient2();

@@ -15,15 +15,6 @@ public:
 
 GWinSock gWinSock;
 
-void getAddrInfo(struct addrinfo** addr, const char* hostname, const char* port, int ip46) {
-	struct addrinfo hints;
-
-	memset(&hints, 0, sizeof(hints));
-	hints.ai_socktype = SOCK_STREAM;
-	hints.ai_family = ip46;
-	getaddrinfo(hostname, port, &hints, addr);
-}
-
 const char* buildHttpMsg(char* buffer, int size) {
 	int i;
 
@@ -49,7 +40,7 @@ void testSocketOps() {
 	int bys = 0;
 	int s = sockets::createNonblockingOrDie(AF_INET);
 
-	getAddrInfo(&addr, hostname, port, AF_INET);
+	sockets::getAddrInfo(&addr, hostname, port, AF_INET);
 	ret = sockets::connect(s, addr->ai_addr);
 
 	fd_set reads;
@@ -126,7 +117,7 @@ void testSocketClient() {
 	struct addrinfo* addr;
 
 	int s = sockets::createNonblockingOrDie(AF_INET);
-	getAddrInfo(&addr, hostname, port, AF_INET);
+	sockets::getAddrInfo(&addr, hostname, port, AF_INET);
 	int ret = sockets::connect(s, addr->ai_addr);
 	net::Socket sock(s);
 
@@ -498,5 +489,59 @@ void testConnector() {
 	loop.runAfter(3, [&] {
 		loop.quit();
 	});
+	loop.loop();
+}
+
+void testTcpConnection() {
+	EventLoop loop;
+	int s = sockets::createNonblockingOrDie(AF_INET);
+	
+	struct addrinfo* addr;
+	sockets::getAddrInfo(&addr, "www.baidu.com", "80", AF_INET);
+	InetAddress local(2000);
+	InetAddress peer((sockaddr_in&)(addr->ai_addr));
+	std::shared_ptr<TcpConnection> tcpConn(new TcpConnection(&loop, "tcpConn", s, local, peer));
+	
+	tcpConn->setConnectionCallback(nullptr);
+	tcpConn->connectEstablished();
+	tcpConn->connectDestroyed();
+	tcpConn->forceCloseWithDelay(0);
+
+	loop.runAfter(3, [&] {
+		loop.quit();
+	});
+	loop.loop();
+}
+
+void testTcpClient1() {
+	EventLoop loop;
+	InetAddress serverAddr("127.0.0.1", 2); // no such server
+	net::TcpClient client(&loop, serverAddr, "TcpClient");
+	
+	loop.runAfter(0.0, [&] {
+		LOG_INFO << "timeout";
+		client.stop();
+	});
+	loop.runAfter(5.0, std::bind(&EventLoop::quit, &loop));
+	client.connect();
+	std::this_thread::sleep_for(std::chrono::seconds(1));
+	loop.loop();
+}
+
+void testTcpClient2() {
+	InetAddress serverAddr("127.0.0.1", 1234); // should succeed
+	EventLoop loop;
+	Acceptor accp(&loop, serverAddr, true);
+	accp.setNewConnectionCallback(newConnection);
+	accp.listen();
+
+	loop.runAfter(3.0, std::bind(&EventLoop::quit, &loop));
+	Thread thr([&] {
+		TcpClient client(&loop, serverAddr, "TcpClient");
+		client.connect();
+		std::this_thread::sleep_for(std::chrono::seconds(1));
+		client.disconnect();
+	});
+	thr.start();
 	loop.loop();
 }

@@ -32,6 +32,8 @@
     <ClCompile Include="selectPoller.cpp" />
     <ClCompile Include="socket.cpp" />
     <ClCompile Include="socketsOps.cpp" />
+    <ClCompile Include="tcpClient.cpp" />
+    <ClCompile Include="tcpConnection.cpp" />
     <ClCompile Include="timer.cpp" />
     <ClCompile Include="timerQueue.cpp" />
   </ItemGroup>
@@ -51,6 +53,8 @@
     <ClInclude Include="selectPoller.h" />
     <ClInclude Include="socket.h" />
     <ClInclude Include="socketsOps.h" />
+    <ClInclude Include="tcpClient.h" />
+    <ClInclude Include="tcpConnection.h" />
     <ClInclude Include="timeMinHeap.h" />
     <ClInclude Include="timer.h" />
     <ClInclude Include="timerId.h" />

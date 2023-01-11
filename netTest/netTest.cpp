@@ -12,5 +12,9 @@ int main() {
 	//testEventLoopThread();
 	//testEventLoopThreadPool();
 	//testAcceptor();
-	testConnector();
+	//testConnector();
+	//testTcpConnection();
+	//testTcpClient1();
+	testTcpClient2();
+	testTcpClient3();
 }

@@ -6,6 +6,15 @@
 #include <Windows.h>
 
 namespace sockets {
+	void getAddrInfo(struct addrinfo** addr, const char* hostname, const char* port, int ip46) {
+		struct addrinfo hints;
+
+		memset(&hints, 0, sizeof(hints));
+		hints.ai_socktype = SOCK_STREAM;
+		hints.ai_family = ip46;
+		getaddrinfo(hostname, port, &hints, addr);
+	}
+
 	void setNonBlockAndCloseOnExec(int sockfd) {
 		u_long mode = 1;
 		ioctlsocket(sockfd, FIONBIO, &mode);

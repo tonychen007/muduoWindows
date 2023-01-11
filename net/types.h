@@ -1,5 +1,7 @@
 #pragma once
 
+#define FD_SETSIZE 2048
+
 #include <ws2tcpip.h>
 #include <inaddr.h>
 #include <assert.h>

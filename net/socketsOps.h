@@ -9,6 +9,8 @@ namespace sockets {
 		int pipe_write;
 	} stPipe;
 
+	void getAddrInfo(struct addrinfo** addr, const char* hostname, const char* port, int ip46);
+
 	void InitSocket();
 	void DestorySocket();
 
