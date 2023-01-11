@@ -2,8 +2,6 @@
 
 #include "types.h"
 
-#define iovec WSABUF
-
 
 namespace sockets {
 	typedef struct _stPipe {

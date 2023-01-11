@@ -19,9 +19,12 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="buffer.cpp" />
     <ClCompile Include="channel.cpp" />
     <ClCompile Include="defaultPoller.cpp" />
     <ClCompile Include="eventLoop.cpp" />
+    <ClCompile Include="eventLoopThread.cpp" />
+    <ClCompile Include="eventLoopThreadPool.cpp" />
     <ClCompile Include="inetAddress.cpp" />
     <ClCompile Include="poller.cpp" />
     <ClCompile Include="selectPoller.cpp" />
@@ -31,10 +34,13 @@
     <ClCompile Include="timerQueue.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="buffer.h" />
     <ClInclude Include="callbacks.h" />
     <ClInclude Include="channel.h" />
     <ClInclude Include="endian.h" />
     <ClInclude Include="eventLoop.h" />
+    <ClInclude Include="eventLoopThread.h" />
+    <ClInclude Include="eventLoopThreadPool.h" />
     <ClInclude Include="inetAddress.h" />
     <ClInclude Include="poll.h" />
     <ClInclude Include="poller.h" />
@@ -157,6 +163,7 @@
       <LanguageStandard>stdcpp17</LanguageStandard>
       <PrecompiledHeaderOutputFile />
       <AdditionalIncludeDirectories>..\</AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -177,6 +184,7 @@
       </PrecompiledHeaderFile>
       <PrecompiledHeaderOutputFile />
       <AdditionalIncludeDirectories>..\</AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>

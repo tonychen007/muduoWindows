@@ -10,8 +10,12 @@
 #include "net/poller.h"
 #include "net/channel.h"
 #include "net/eventLoop.h"
+#include "net/eventLoopThread.h"
+#include "net/eventLoopThreadPool.h"
 #include "net/timerQueue.h"
-#include <Windows.h>
+#include "net/buffer.h"
+
+#include <chrono>
 
 void testSocketOps();
 void testInetAddress();
@@ -20,3 +24,6 @@ void testSocketServer();
 void testTimer();
 void testEventloop();
 void testTimerQueue();
+void testBuffer();
+void testEventLoopThread();
+void testEventLoopThreadPool();

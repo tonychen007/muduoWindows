@@ -215,7 +215,7 @@ void cancel(TimerId timer, net::EventLoop* pLoop) {
 
 void testTimerQueue() {
 	net::EventLoop loop;
-	
+
 	loop.runAfter(1, std::bind(print, "once1", &loop));
 	loop.runAfter(2.5, std::bind(print, "once2.5", &loop));
 	loop.runAfter(3, std::bind(print, "once3", &loop));
@@ -225,6 +225,236 @@ void testTimerQueue() {
 	loop.runEvery(2, std::bind(print, "every2", &loop));
 	TimerId t3 = loop.runEvery(3, std::bind(print, "every3", &loop));
 	loop.runAfter(9.001, std::bind(cancel, t3, &loop));
+
+	loop.loop();
+}
+
+void testBuffer() {
+
+	{
+		Buffer buf;
+		assert(buf.readableBytes() == 0);
+		assert(buf.writableBytes() == Buffer::kInitialSize);
+		assert(buf.prependableBytes() == Buffer::kCheapPrepend);
+
+		const string str(200, 'x');
+		buf.append(str);
+		assert(buf.readableBytes() == str.size());
+		assert(buf.writableBytes() == Buffer::kInitialSize - str.size());
+		assert(buf.prependableBytes() == Buffer::kCheapPrepend);
+
+		const string str2 = buf.retrieveAsString(50);
+		assert(str2.size() == 50);
+		assert(buf.readableBytes() == str.size() - str2.size());
+		assert(buf.writableBytes() == Buffer::kInitialSize - str.size());
+		assert(buf.prependableBytes() == Buffer::kCheapPrepend + str2.size());
+		assert(str2 == string(50, 'x'));
+
+		buf.append(str);
+		assert(buf.readableBytes() == 2 * str.size() - str2.size());
+		assert(buf.writableBytes() == Buffer::kInitialSize - 2 * str.size());
+		assert(buf.prependableBytes() == Buffer::kCheapPrepend + str2.size());
+
+		const string str3 = buf.retrieveAllAsString();
+		assert(str3.size() == 350);
+		assert(buf.readableBytes() == 0);
+		assert(buf.writableBytes() == Buffer::kInitialSize);
+		assert(buf.prependableBytes() == Buffer::kCheapPrepend);
+		assert(str3 == string(350, 'x'));
+	}
+
+	{
+		Buffer buf;
+		buf.append(string(400, 'y'));
+		assert(buf.readableBytes() == 400);
+		assert(buf.writableBytes() == Buffer::kInitialSize - 400);
+
+		buf.retrieve(50);
+		assert(buf.readableBytes() == 350);
+		assert(buf.writableBytes() == Buffer::kInitialSize - 400);
+		assert(buf.prependableBytes() == Buffer::kCheapPrepend + 50);
+
+		buf.append(string(1000, 'z'));
+		assert(buf.readableBytes() == 1350);
+		assert(buf.writableBytes() == 0);
+		assert(buf.prependableBytes() == Buffer::kCheapPrepend + 50); // FIXME
+
+		buf.retrieveAll();
+		assert(buf.readableBytes() == 0);
+		assert(buf.writableBytes() == 1400); // FIXME
+		assert(buf.prependableBytes() == Buffer::kCheapPrepend);
+	}
+
+	{
+		Buffer buf;
+		buf.append(string(800, 'y'));
+		assert(buf.readableBytes() == 800);
+		assert(buf.writableBytes() == Buffer::kInitialSize - 800);
+
+		buf.retrieve(500);
+		assert(buf.readableBytes() == 300);
+		assert(buf.writableBytes() == Buffer::kInitialSize - 800);
+		assert(buf.prependableBytes() == Buffer::kCheapPrepend + 500);
+
+		buf.append(string(300, 'z'));
+		assert(buf.readableBytes() == 600);
+		assert(buf.writableBytes() == Buffer::kInitialSize - 600);
+		assert(buf.prependableBytes() == Buffer::kCheapPrepend);
+	}
+
+	{
+		Buffer buf;
+		buf.append(string(2000, 'y'));
+		assert(buf.readableBytes() == 2000);
+		assert(buf.writableBytes() == 0);
+		assert(buf.prependableBytes() == Buffer::kCheapPrepend);
+
+		buf.retrieve(1500);
+		assert(buf.readableBytes() == 500);
+		assert(buf.writableBytes() == 0);
+		assert(buf.prependableBytes() == Buffer::kCheapPrepend + 1500);
+
+		buf.shrink(0);
+		assert(buf.readableBytes() == 500);
+		assert(buf.writableBytes() == Buffer::kInitialSize - 500);
+		assert(buf.retrieveAllAsString() == string(500, 'y'));
+		assert(buf.prependableBytes() == Buffer::kCheapPrepend);
+	}
+	
+	{
+		Buffer buf;
+		buf.append(string(200, 'y'));
+		assert(buf.readableBytes(), 200);
+		assert(buf.writableBytes() == Buffer::kInitialSize - 200);
+		assert(buf.prependableBytes() == Buffer::kCheapPrepend);
+
+		int x = 0;
+		buf.prepend(&x, sizeof x);
+		assert(buf.readableBytes() == 204);
+		assert(buf.writableBytes() == Buffer::kInitialSize - 200);
+		assert(buf.prependableBytes() == Buffer::kCheapPrepend - 4);
+	}
+	
+	{
+		Buffer buf;
+		buf.append("HTTP");
+
+		assert(buf.readableBytes() == 4);
+		assert(buf.peekInt8() == 'H');
+		int top16 = buf.peekInt16();
+		assert(top16 == 'H' * 256 + 'T');
+		assert(buf.peekInt32() == top16 * 65536 + 'T' * 256 + 'P');
+
+		assert(buf.readInt8() == 'H');
+		assert(buf.readInt16() == 'T' * 256 + 'T');
+		assert(buf.readInt8() == 'P');
+		assert(buf.readableBytes() == 0);
+		assert(buf.writableBytes() == Buffer::kInitialSize);
+
+		buf.appendInt8(-1);
+		buf.appendInt16(-2);
+		buf.appendInt32(-3);
+		assert(buf.readableBytes() == 7);
+		assert(buf.readInt8() == -1);
+		assert(buf.readInt16() == -2);
+		assert(buf.readInt32() == -3);
+	}
+	
+	{
+		Buffer buf;
+		buf.append(string(100000, 'x'));
+		const char* null = NULL;
+		assert(buf.findEOL() == null);
+		assert(buf.findEOL(buf.peek() + 90000) == null);
+	}
+
+	Buffer buf;
+	buf.append("muduo", 5);
+	const void* inner = buf.peek();
+	// printf("Buffer at %p, inner %p\n", &buf, inner);
+	//output(std::move(buf), inner);
+	Buffer newbuf(std::move(buf));
+	assert(inner, newbuf.peek());
+}
+
+void testEventLoopThread() {
+	{
+		EventLoopThread thr1;  // never start
+	}
+
+	{
+		// dtor calls quit()
+		EventLoopThread thr2;
+		EventLoop* loop = thr2.startLoop();
+		loop->runInLoop([&] {
+			printf("print: pid = %d, tid = %d, loop = %p\n",
+				_getpid(), CurrentThread::tid(), loop);
+		});
+		std::this_thread::sleep_for(std::chrono::seconds(1));
+	}
+
+	// quit() before dtor
+	EventLoopThread thr3;
+	EventLoop* loop = thr3.startLoop();
+	loop->runInLoop([&] {
+		printf("print: pid = %d, tid = %d, loop = %p\n",
+			_getpid(), CurrentThread::tid(), loop);
+		loop->quit();
+	});
+	std::this_thread::sleep_for(std::chrono::seconds(1));
+}
+
+
+void init(EventLoop* p) {
+	printf("init(): pid = %d, tid = %d, loop = %p\n",
+		getpid(), CurrentThread::tid(), p);
+}
+
+void testEventLoopThreadPool() {
+	EventLoop loop;
+	loop.runAfter(10, std::bind(&EventLoop::quit, &loop));
+	
+	{
+		printf("Single thread %p:\n", &loop);
+		EventLoopThreadPool model(&loop, "single");
+		model.setThreadNum(0);
+		model.start(init);
+		assert(model.getNextLoop() == &loop);
+		assert(model.getNextLoop() == &loop);
+		assert(model.getNextLoop() == &loop);
+	}
+
+	{
+		printf("Another thread:\n");
+		EventLoopThreadPool model(&loop, "another");
+		model.setThreadNum(1);
+		model.start(init);
+		EventLoop* nextLoop = model.getNextLoop();
+		nextLoop->runAfter(2, [&] {
+			printf("main(): pid = %d, tid = %d, loop = %p\n",
+				getpid(), CurrentThread::tid(), nextLoop);
+		});
+		assert(nextLoop != &loop);
+		assert(nextLoop == model.getNextLoop());
+		assert(nextLoop == model.getNextLoop());
+		std::this_thread::sleep_for(std::chrono::seconds(3));
+	}
+
+	{
+		printf("Three threads:\n");
+		EventLoopThreadPool model(&loop, "three");
+		model.setThreadNum(3);
+		model.start(init);
+		EventLoop* nextLoop = model.getNextLoop();
+		nextLoop->runInLoop([&] {
+			printf("main(): pid = %d, tid = %d, loop = %p\n",
+				getpid(), CurrentThread::tid(), nextLoop);
+		});
+		assert(nextLoop != &loop);
+		assert(nextLoop != model.getNextLoop());
+		assert(nextLoop != model.getNextLoop());
+		assert(nextLoop == model.getNextLoop());
+	}
 
 	loop.loop();
 }
