@@ -24,6 +24,8 @@
     <ClCompile Include="channel.cpp" />
     <ClCompile Include="connector.cpp" />
     <ClCompile Include="defaultPoller.cpp" />
+    <ClCompile Include="epoll.cpp" />
+    <ClCompile Include="epollPoller.cpp" />
     <ClCompile Include="eventLoop.cpp" />
     <ClCompile Include="eventLoopThread.cpp" />
     <ClCompile Include="eventLoopThreadPool.cpp" />
@@ -45,10 +47,14 @@
     <ClInclude Include="channel.h" />
     <ClInclude Include="connector.h" />
     <ClInclude Include="endian.h" />
+    <ClInclude Include="epoll.h" />
+    <ClInclude Include="epollPoller.h" />
     <ClInclude Include="eventLoop.h" />
     <ClInclude Include="eventLoopThread.h" />
     <ClInclude Include="eventLoopThreadPool.h" />
     <ClInclude Include="inetAddress.h" />
+    <ClInclude Include="msafd.h" />
+    <ClInclude Include="ntapi.h" />
     <ClInclude Include="poll.h" />
     <ClInclude Include="poller.h" />
     <ClInclude Include="selectPoller.h" />

@@ -1,7 +1,8 @@
+#include "epoll.h"
+#include "poll.h"
 #include "base/Logging.h"
 #include "channel.h"
 #include "eventLoop.h"
-
 #include <sstream>
 
 using namespace net;
@@ -63,7 +64,7 @@ void Channel::handleEvent(Timestamp receiveTime) {
 void Channel::handleEventWithGuard(Timestamp receiveTime) {
     eventHandling_ = true;
     LOG_TRACE << reventsToString();
-    if ((revents_ & POLLHUP) && !(revents_ & POLLIN)) {
+    if ((revents_ & EPOLLHUP) && !(revents_ & EPOLLIN)) {
         if (logHup_) {
             LOG_WARN << "fd = " << fd_ << " Channel::handle_event() POLLHUP";
         }

@@ -7,7 +7,7 @@
 
 using namespace net;
 
-int numThreads = 0;
+int numThreads = 4;
 class EchoClient;
 std::vector<std::unique_ptr<EchoClient>> clients;
 int current = 0;

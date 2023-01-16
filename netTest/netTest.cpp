@@ -16,5 +16,5 @@ int main() {
 	//testTcpConnection();
 	//testTcpClient1();
 	testTcpClient2();
-	testTcpServer();
+	//testTcpServer();
 }
