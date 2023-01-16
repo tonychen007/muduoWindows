@@ -1,0 +1,162 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="來源檔案">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="標頭檔">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="資源檔">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="socketsOps.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="inetAddress.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="socket.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="timer.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="poller.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="channel.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="eventLoop.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="defaultPoller.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="selectPoller.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="timerQueue.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="buffer.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="eventLoopThread.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="eventLoopThreadPool.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="acceptor.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="connector.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="tcpConnection.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="tcpClient.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="tcpServer.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="epoll.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="epollPoller.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="endian.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="socketsOps.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="types.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="inetAddress.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="socket.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="callbacks.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="timer.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="timerId.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="poll.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="eventLoop.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="poller.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="channel.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="selectPoller.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="timerQueue.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="timeMinHeap.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="buffer.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="eventLoopThread.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="eventLoopThreadPool.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="acceptor.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="connector.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="tcpConnection.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="tcpClient.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="tcpServer.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="epoll.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="msafd.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="ntapi.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="epollPoller.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

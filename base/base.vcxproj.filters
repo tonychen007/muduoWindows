@@ -1,0 +1,138 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="countDownLatch.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="currentThread.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="exception.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="mutexGuard.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="thread.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="threadpool.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="timestamp.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="date.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="fileUtil.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="tool.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="processInfo.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="logStream.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="logging.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="timezone.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="logFile.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="asyncLogging.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="atomic.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="blockingQueue.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="boundedBlockingQueue.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="condition.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="currentThread.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="countDownLatch.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="exception.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="mutexGuard.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="noncopyable.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="singleton.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="stringPiece.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="thread.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="threadpool.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="timestamp.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="types.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="weakCallback.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="date.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="fileUtil.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="processInfo.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="tool.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="logStream.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="logging.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="timezone.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="logFile.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="asyncLogging.h">
+      <Filter>header</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="src">
+      <UniqueIdentifier>{8a62f2cd-17be-4bbb-a39f-2bb9267002d2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="header">
+      <UniqueIdentifier>{94acfa94-54ac-4c7a-8603-47b477d1c9f3}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

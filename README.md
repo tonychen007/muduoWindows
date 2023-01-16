@@ -1,5 +1,8 @@
 # muduoWindows
 porting muduo to Windows
 
-From https://github.com/chenshuo/muduo
-And From https://github.com/kevin-gjm/muduo-win/
+Origin code is by Chenshuo https://github.com/chenshuo/muduo
+
+Already existed version is  from https://github.com/kevin-gjm/muduo-win/
+
+Epoll on windows is copied from https://github.com/truebiker/epoll_windows
